@@ -14,10 +14,11 @@ export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator>
+      <Stack.Screen name="Cadastro" component={Cadastro} options={{headerShown: false}}/>
       <Stack.Screen name ="Login" component={Login} options={{headerShown: false}}/>
       <Stack.Screen name="Menu"     component={Menu} options={{headerShown: false}}/>
       <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
-      <Stack.Screen name="Cadastro" component={Cadastro} options={{headerShown: false}}/>
+      
     </Stack.Navigator>
   </NavigationContainer>
   );
