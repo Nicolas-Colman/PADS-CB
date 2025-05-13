@@ -11,7 +11,7 @@ const Alertas = () => {
     return (
         <KeyboardAvoidingView  style={estilo.tela}>
             <View>
-                <Text>Serviços</Text>
+                <Text>Servicos</Text>
             </View>
             
         </KeyboardAvoidingView>
