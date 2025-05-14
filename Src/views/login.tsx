@@ -5,10 +5,15 @@ import { KeyboardAvoidingView, View, TextInput, Text, TouchableOpacity } from "r
 import estilo from "../../estilo";
 import { auth, firestore } from '../../firebase';
 
+
+import { RootStackParamList } from "../../types";
+import type { StackNavigationProp } from "@react-navigation/stack";
+type NavigationProps = StackNavigationProp<RootStackParamList, 'Login'>;
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const navigation = useNavigation();
+     const navigation = useNavigation<NavigationProps>();
 
     const Login = async () => {
         try {

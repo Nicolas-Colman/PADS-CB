@@ -8,14 +8,19 @@ import { auth, firestore, storage } from "../../firebase";
 import { uploadBytes } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 
-
-
+import { RootStackParamList } from "../../types";
+import type { StackNavigationProp } from "@react-navigation/stack";
+type NavigationProps = StackNavigationProp<RootStackParamList, 'Cadastro'>;
 
 
 const Cadastro = () => {
     const [formUsuario, setFormUsuario] = useState<Partial<Usuario>>({});
-    const navigation = useNavigation();
+    //const navigation = useNavigation();
     const [imagePath, setImagePath] = useState('');
+
+    
+    const navigation = useNavigation<NavigationProps>();
+ 
 
     const refUsuario = firestore.collection("Perfil/ClienteDoc/Cliente")
 
