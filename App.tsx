@@ -5,7 +5,6 @@ import { StyleSheet, View } from 'react-native';
 import * as React from 'react';
 import Login from "./Src/views/login";
 import Cadastro from './Src/views/Cadastro';
-import Home from './Src/views/home';
 import Menu from './Src/views/Menu';
 
 const Stack = createNativeStackNavigator();
@@ -14,10 +13,9 @@ export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator>      
-      <Stack.Screen name ="Login" component={Login} options={{headerShown: false}}/>
-      <Stack.Screen name="Cadastro" component={Cadastro} options={{headerShown: false}}/>
+      <Stack.Screen name ="Login" component={Login} options={{headerShown: true}}/>
+      <Stack.Screen name="Cadastro" component={Cadastro} options={{headerShown: true}}/>
       <Stack.Screen name="Menu"     component={Menu} options={{headerShown: false}}/>
-      <Stack.Screen name="Home" component={Home} options={{headerShown: false}}/>
     </Stack.Navigator>
   </NavigationContainer>
   );

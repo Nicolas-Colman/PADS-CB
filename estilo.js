@@ -9,5 +9,16 @@ export default StyleSheet.create({
         
 
     },
+    
+    imagemView:{
+        alignContent: "center",
+        alignItems: "center"
+    },
+
+    imagemPerfil: {
+        width: 150,
+        height: 150,
+        borderRadius: 150/2,
+    },
 
 })

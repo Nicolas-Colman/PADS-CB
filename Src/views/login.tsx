@@ -3,19 +3,19 @@ import * as React from 'react';
 import { useState } from "react";
 import { KeyboardAvoidingView, View, TextInput, Text, TouchableOpacity } from "react-native";
 import estilo from "../../estilo";
-import { auth, firestore } from '../../firebase'; // ⚠️ firestore precisa estar exportado do seu arquivo firebase.js
+import { auth, firestore } from '../../firebase';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const navigation = useNavigation();
 
-    const handleLogin = async () => {
+    const Login = async () => {
         try {
             const userCredential = await auth.signInWithEmailAndPassword(email, senha);
             const user = userCredential.user;
 
-            // 🔍 Buscar Role no Firestore
+            
             const docSnap = await firestore
                 .collection("Perfil")
                 .doc("ClienteDoc")
@@ -44,7 +44,7 @@ const Login = () => {
         }
     };
 
-    const handleRegistrar = () => {
+    const Registrar = () => {
         navigation.replace('Cadastro');
     };
 
@@ -63,11 +63,11 @@ const Login = () => {
             </View>
 
             <View>
-                <TouchableOpacity onPress={handleLogin}>
+                <TouchableOpacity onPress={Login}>
                     <Text>Login</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={handleRegistrar}>
+                <TouchableOpacity onPress={Registrar}>
                     <Text>Registrar-se</Text>
                 </TouchableOpacity>
             </View>

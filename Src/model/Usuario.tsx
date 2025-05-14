@@ -3,7 +3,9 @@ export class Usuario {
     public userNome     : string | undefined;
     public userEmail    : string | undefined;
     public userSenha    : string | undefined;
-    public userRole    : string | undefined
+    public userRepSenha : string | undefined;
+    public userRole     : string | undefined;
+    public userUrlFoto  : string | undefined;
 
     constructor(obj?: Partial<Usuario>){
         if(obj){
@@ -11,6 +13,7 @@ export class Usuario {
             this.userNome   = obj.userNome
             this.userEmail  = obj.userEmail
             this.userSenha  = obj.userSenha
+            this.userRepSenha  = obj.userRepSenha
             this.userRole  = obj.userRole
         }
     }
@@ -21,6 +24,7 @@ export class Usuario {
         "userNome"      :"${this.userNome}",
         "userEmail"     :"${this.userEmail}",
         "userSenha"     :"${this.userSenha}",
+        "userRepSenha"     :"${this.userRepSenha}",
         "userRole"     :"${this.userRole}",
         }`
 
@@ -33,6 +37,7 @@ export class Usuario {
             userNome    : this.userNome,   
             userEmail   : this.userEmail,  
             userSenha   : this.userSenha, 
+            userRepSenha   : this.userRepSenha, 
             userRole   : this.userRole  
         }
         return usuario
