@@ -5,10 +5,12 @@ import { KeyboardAvoidingView, View, TextInput, Text, TouchableOpacity } from "r
 import estilo from "../../estilo";
 import { auth, firestore } from '../../firebase';
 
+
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const navigation = useNavigation();
+     const navigation = useNavigation();
 
     const Login = async () => {
         try {
