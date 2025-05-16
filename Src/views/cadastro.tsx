@@ -8,20 +8,13 @@ import { auth, firestore, storage } from "../../firebase";
 import { uploadBytes } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 
-import { RootStackParamList } from "../../types";
-import type { StackNavigationProp } from "@react-navigation/stack";
-type NavigationProps = StackNavigationProp<RootStackParamList, 'Cadastro'>;
+
 
 
 const Cadastro = () => {
     const [formUsuario, setFormUsuario] = useState<Partial<Usuario>>({});
-    //const navigation = useNavigation();
-    const [imagePath, setImagePath] = useState('');
-
-    
-    const navigation = useNavigation<NavigationProps>();
- 
-
+    const [imagePath, setImagePath] = useState(''); 
+    const navigation = useNavigation();
     const refUsuario = firestore.collection("Perfil/ClienteDoc/Cliente")
 
     const Limpar = () => {
@@ -95,7 +88,6 @@ const Cadastro = () => {
             aspect: [4, 4],
             quality: 1,
         });
-        console.log(result.assets[0]);
         enviarImagem(result);
     }
 
@@ -111,7 +103,6 @@ const Cadastro = () => {
             aspect: [4, 3],
             quality: 1,
         });
-        console.log(result);
         enviarImagem(result);
     }
 
@@ -177,7 +168,7 @@ const Cadastro = () => {
                 />
                 <TextInput
                     placeholder="Repetir Senha"
-                    value={formUsuario.userRepSenha}
+                    value={formUsuario.userRepSenha || ""}
                     onChangeText={(texto) => {
                         setFormUsuario({ ...formUsuario, userRepSenha: texto })
                     }}
@@ -187,13 +178,13 @@ const Cadastro = () => {
 
             <View >
                 <TouchableOpacity onPress={Registro}>
-                    <View> <Text>Registrar</Text></View>
+                    <Text>Registrar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={Limpar}>
-                    <View> <Text>Limpa</Text></View>
+                    <Text>Limpa</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={Login}>
-                    <View> <Text>Login</Text></View>
+                    <Text>Login</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>

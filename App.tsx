@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import * as React from 'react';
 import Login from "./Src/views/login";
-import Cadastro from './Src/views/Cadastro';
+import Cadastro from './Src/views/cadastro';
 import Menu from './Src/views/Menu';
 
 const Stack = createNativeStackNavigator();
