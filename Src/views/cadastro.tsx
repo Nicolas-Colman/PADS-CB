@@ -19,24 +19,43 @@ const Cadastro = () => {
 
     const Limpar = () => {
         setFormUsuario({});
+        setImagePath('');
     };
     const Login = () => {
         navigation.replace('Login');
     };
 
-    const [erroSenha, setErroSenha] = useState("");
-
-    useEffect(() => {
-        if (formUsuario.userSenha !== formUsuario.userRepSenha) {
-            setErroSenha("As senhas não coincidem");
+    const [erro, setErro] = useState("");
+  
+   useEffect(() => {
+        setErro('')
+        if(formUsuario.userUrlFoto == undefined){
+            setErro("Insira uma foto")
         }
-        else {
-            setErroSenha("");
+        else if(formUsuario.userNome == undefined){
+            setErro("insira um seu nome")
         }
-    }, [formUsuario.userSenha, formUsuario.userRepSenha]);
+        else if(formUsuario.userEmail == undefined  || !formUsuario.userEmail.includes('@gmail.com')){
+            setErro("Email Invalido")
+        }
+        else if (!formUsuario.userSenha || formUsuario.userSenha.length < 6) {
+            setErro("A senha deve conter no minimo 6 caracteres");
+        }
+        else if (formUsuario.userSenha == undefined || formUsuario.userRepSenha == undefined) {
+            setErro("Campo de senha vazio");
+        }
+        else if (formUsuario.userSenha !== formUsuario.userRepSenha) {
+            setErro("As senhas não coincidem");
+        }
+        
+        
+    }, [formUsuario.userNome,formUsuario.userSenha,formUsuario.userRepSenha, formUsuario.userUrlFoto, formUsuario.userEmail]);
+        
+  
 
     const Registro = () => {
-        if (!erroSenha) {
+        console.log("teste", formUsuario.userEmail)
+            if (!erro ) {
             auth
                 .createUserWithEmailAndPassword(formUsuario.userEmail!, formUsuario.userSenha!)
                 .then((userCredentials) => {
@@ -53,8 +72,8 @@ const Cadastro = () => {
                 })
                 .catch((error) => alert(error.message));
         }
-        else if (erroSenha) {
-            alert("Nem todos os campos estão corretamente preenchidos!")
+        else if (erro) {
+            Alert.alert('Alerta', erro);
         }
 
     };
@@ -89,6 +108,7 @@ const Cadastro = () => {
             quality: 1,
         });
         enviarImagem(result);
+        
     }
 
     const abrirGaleria = async () => {
