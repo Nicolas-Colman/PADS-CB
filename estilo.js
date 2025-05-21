@@ -20,5 +20,12 @@ export default StyleSheet.create({
         height: 150,
         borderRadius: 150/2,
     },
+    
+    msg: {
+        fontSize: 40,
+        color: 'grey',
+        
+        
+    },
 
 })

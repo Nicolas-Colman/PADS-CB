@@ -28,7 +28,6 @@ const Cadastro = () => {
     const [erro, setErro] = useState("");
   
    useEffect(() => {
-        setErro('')
         if(formUsuario.userUrlFoto == undefined){
             setErro("Insira uma foto")
         }
@@ -47,6 +46,9 @@ const Cadastro = () => {
         else if (formUsuario.userSenha !== formUsuario.userRepSenha) {
             setErro("As senhas não coincidem");
         }
+        else {
+            setErro('pass');
+        }
         
         
     }, [formUsuario.userNome,formUsuario.userSenha,formUsuario.userRepSenha, formUsuario.userUrlFoto, formUsuario.userEmail]);
@@ -55,7 +57,7 @@ const Cadastro = () => {
 
     const Registro = () => {
         console.log("teste", formUsuario.userEmail)
-            if (!erro ) {
+            if (erro === 'pass' ) {
             auth
                 .createUserWithEmailAndPassword(formUsuario.userEmail!, formUsuario.userSenha!)
                 .then((userCredentials) => {
@@ -72,7 +74,7 @@ const Cadastro = () => {
                 })
                 .catch((error) => alert(error.message));
         }
-        else if (erro) {
+        else if (erro !== 'pass') {
             Alert.alert('Alerta', erro);
         }
 
