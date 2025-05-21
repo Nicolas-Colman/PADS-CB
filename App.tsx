@@ -7,17 +7,19 @@ import Login from "./Src/views/Login";
 import Cadastro from './Src/views/Cadastro';
 import Menu from './Src/views/Menu';
 import RecuperaSenha from './Src/views/RecuperaSenha'; 
+import Config from './Src/views/Config';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-    <Stack.Navigator>      
-      <Stack.Screen name ="Login" component={Login} options={{headerShown: true}}/>
-      <Stack.Screen name="Cadastro" component={Cadastro} options={{headerShown: true}}/>
-      <Stack.Screen name="RecuperaSenha" component={RecuperaSenha} options={{headerShown: true}}/>
+    <Stack.Navigator> 
+      <Stack.Screen name ="Login" component={Login} options={{headerShown: false}}/>
+      <Stack.Screen name="Cadastro" component={Cadastro} options={{headerShown: false}}/>
+      <Stack.Screen name="RecuperaSenha" component={RecuperaSenha} options={{headerShown: false}}/>
       <Stack.Screen name="Menu"     component={Menu} options={{headerShown: false}}/>
+      <Stack.Screen name ="Config" component={Config} options={{headerShown: false}}/>
     </Stack.Navigator>
   </NavigationContainer>
   );
