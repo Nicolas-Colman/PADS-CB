@@ -16,7 +16,7 @@ export default function App() {
     <Stack.Navigator>      
       <Stack.Screen name ="Login" component={Login} options={{headerShown: true}}/>
       <Stack.Screen name="Cadastro" component={Cadastro} options={{headerShown: true}}/>
-      <Stack.Screen name="RecuperaSenha" component={RecuperaSenha} options={{headerShown: true}}/>
+      <Stack.Screen name="RecuperaSenha" component={RecuperaSenha} options={{headerShown: false}}/>
       <Stack.Screen name="Menu"     component={Menu} options={{headerShown: false}}/>
     </Stack.Navigator>
   </NavigationContainer>
