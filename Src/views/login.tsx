@@ -5,11 +5,16 @@ import { KeyboardAvoidingView, View, TextInput, Text, TouchableOpacity } from "r
 import estilo from "../../estilo";
 import { auth, firestore } from '../../firebase';
 
+
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const navigation = useNavigation();
+     const navigation = useNavigation();
 
+    const recSenha = () =>{
+        navigation.replace('RecuperaSenha')
+    }
     const Login = async () => {
         try {
             const userCredential = await auth.signInWithEmailAndPassword(email, senha);
@@ -69,6 +74,9 @@ const Login = () => {
 
                 <TouchableOpacity onPress={Registrar}>
                     <Text>Registrar-se</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={recSenha}>
+                    <Text>Esqueci minha senha?</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>

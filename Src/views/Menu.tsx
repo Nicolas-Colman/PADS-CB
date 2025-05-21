@@ -3,11 +3,11 @@ import * as React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import Home from "./home";
-import Ocorrencias from "./ocorrencia";
-import Chamados from "./chamados";
-import Empresas from "./empresas";
-import Alerta from "./alertas";
+import Home from "./Home";
+import Ocorrencias from "./Ocorrencia";
+import Chamados from "./Chamados";
+import Empresas from "./Empresas";
+import Alerta from "./Alertas";
 
 const Tab = createBottomTabNavigator();
 

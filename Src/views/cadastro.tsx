@@ -11,34 +11,51 @@ import * as ImagePicker from "expo-image-picker";
 
 
 
-
 const Cadastro = () => {
     const [formUsuario, setFormUsuario] = useState<Partial<Usuario>>({});
+    const [imagePath, setImagePath] = useState(''); 
     const navigation = useNavigation();
-    const [imagePath, setImagePath] = useState('');
-
     const refUsuario = firestore.collection("Perfil/ClienteDoc/Cliente")
 
     const Limpar = () => {
         setFormUsuario({});
+        setImagePath('');
     };
     const Login = () => {
         navigation.replace('Login');
     };
 
-    const [erroSenha, setErroSenha] = useState("");
-
-    useEffect(() => {
-        if (formUsuario.userSenha !== formUsuario.userRepSenha) {
-            setErroSenha("As senhas não coincidem");
+    const [erro, setErro] = useState("");
+  
+   useEffect(() => {
+        setErro('')
+        if(formUsuario.userUrlFoto == undefined){
+            setErro("Insira uma foto")
         }
-        else {
-            setErroSenha("");
+        else if(formUsuario.userNome == undefined){
+            setErro("insira um seu nome")
         }
-    }, [formUsuario.userSenha, formUsuario.userRepSenha]);
+        else if(formUsuario.userEmail == undefined  || !formUsuario.userEmail.includes('@gmail.com')){
+            setErro("Email Invalido")
+        }
+        else if (!formUsuario.userSenha || formUsuario.userSenha.length < 6) {
+            setErro("A senha deve conter no minimo 6 caracteres");
+        }
+        else if (formUsuario.userSenha == undefined || formUsuario.userRepSenha == undefined) {
+            setErro("Campo de senha vazio");
+        }
+        else if (formUsuario.userSenha !== formUsuario.userRepSenha) {
+            setErro("As senhas não coincidem");
+        }
+        
+        
+    }, [formUsuario.userNome,formUsuario.userSenha,formUsuario.userRepSenha, formUsuario.userUrlFoto, formUsuario.userEmail]);
+        
+  
 
     const Registro = () => {
-        if (!erroSenha) {
+        console.log("teste", formUsuario.userEmail)
+            if (!erro ) {
             auth
                 .createUserWithEmailAndPassword(formUsuario.userEmail!, formUsuario.userSenha!)
                 .then((userCredentials) => {
@@ -55,8 +72,8 @@ const Cadastro = () => {
                 })
                 .catch((error) => alert(error.message));
         }
-        else if (erroSenha) {
-            alert("Nem todos os campos estão corretamente preenchidos!")
+        else if (erro) {
+            Alert.alert('Alerta', erro);
         }
 
     };
@@ -90,8 +107,8 @@ const Cadastro = () => {
             aspect: [4, 4],
             quality: 1,
         });
-        console.log(result.assets[0]);
         enviarImagem(result);
+        
     }
 
     const abrirGaleria = async () => {
@@ -106,7 +123,6 @@ const Cadastro = () => {
             aspect: [4, 3],
             quality: 1,
         });
-        console.log(result);
         enviarImagem(result);
     }
 
@@ -172,7 +188,7 @@ const Cadastro = () => {
                 />
                 <TextInput
                     placeholder="Repetir Senha"
-                    value={formUsuario.userRepSenha}
+                    value={formUsuario.userRepSenha || ""}
                     onChangeText={(texto) => {
                         setFormUsuario({ ...formUsuario, userRepSenha: texto })
                     }}
@@ -182,13 +198,13 @@ const Cadastro = () => {
 
             <View >
                 <TouchableOpacity onPress={Registro}>
-                    <View> <Text>Registrar</Text></View>
+                    <Text>Registrar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={Limpar}>
-                    <View> <Text>Limpa</Text></View>
+                    <Text>Limpa</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={Login}>
-                    <View> <Text>Login</Text></View>
+                    <Text>Login</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>
