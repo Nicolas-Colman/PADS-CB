@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useState, useEffect } from "react";
 import { KeyboardAvoidingView, View, TextInput, Text, TouchableOpacity } from "react-native";
 import estilo from "../../estilo";
-import { auth, firestore, authRec } from '../../firebase';
+import { auth, firestore} from '../../firebase';
 
 
 
