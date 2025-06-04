@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,246 +6,195 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
+import { Ionicons } from "@expo/vector-icons";
+import { Ocorrencia } from "../model/ocorrencia";
+import { firestore, storage } from "../../firebase";
+import { uploadBytes } from "firebase/storage";
+import estilo from "../../estilo"
 
-const NovaOcorrencia = () => {
+const NovaOcorrencias = () => {
   const navigation = useNavigation();
-  const [imagemSelecionada, setImagemSelecionada] = useState(null);
-  const [mostrarCategorias, setMostrarCategorias] = useState(false);
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState("");
+  const [formOcorrencia, setFormOcorrencia] = useState<Partial<Ocorrencia>>({});
+  const [selecionado, setSelecionado] = useState<string>('');
+  const [imagePath, setImagePath] = useState('');
+  const refOcorrencia = firestore.collection("Ocorrencia/OcorrenciaDoc/Ocorrencia");
 
-  const categorias = [
-    { id: "energia", label: "ENERGIA ELÉTRICA", icon: "flash", cor: "#F57C00" },
-    { id: "agua", label: "ÁGUA/ESGOTO", icon: "water", cor: "#039BE5" },
-    { id: "lixo", label: "COLETA DE LIXO", icon: "trash", cor: "#7E57C2" },
-    { id: "buraco", label: "BURACO NA VIA", icon: "ellipse", cor: "#000" },
-    { id: "outros", label: "OUTROS (GERAL)", icon: "megaphone", cor: "#EC407A" },
-  ];
+  const [region, setRegion] = useState({
+    latitude: -30.0346,
+    longitude: -51.2177,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  });
 
-  const selecionarImagem = async () => {
-    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!perm.granted) {
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permissão negada", "Precisamos da sua permissão para acessar localização.");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+
+      setFormOcorrencia((prev) => ({
+        ...prev,
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      }));
+    })();
+  }, []);
+
+  const voltar = () => {
+    navigation.replace("Menu", { screen: "Ocorrencias" });
+  };
+
+  const escolheFoto = () => {
+    Alert.alert("Selecionar Foto", "Escolha uma alternativa", [
+      { text: "Câmera", onPress: abrirCamera },
+      { text: "Galeria", onPress: abrirGaleria },
+    ]);
+  };
+
+  const abrirCamera = async () => {
+    const permissao = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permissao.granted) {
+      alert("Permissão negada para acessar a câmera.");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({ mediaTypes: "images", allowsEditing: true, quality: 1 });
+    enviarImagem(result);
+  };
+
+  const abrirGaleria = async () => {
+    const permissao = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissao.granted) {
       alert("Permissão negada para acessar a galeria.");
       return;
     }
 
-    const resultado = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
+    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: "images", allowsEditing: true, quality: 1 });
+    enviarImagem(result);
+  };
 
-    if (!resultado.canceled) {
-      setImagemSelecionada(resultado.assets[0].uri);
+  const enviarImagem = async (result: any) => {
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setImagePath(uri);
+      const filename = uri.split("/").pop();
+      const ref = storage.ref(`ocorImg/${filename}`);
+      const img = await fetch(uri);
+      const blob = await img.blob();
+      const fbResult = await uploadBytes(ref, blob);
+
+      const urlDownload = await storage.ref(fbResult.metadata.fullPath).getDownloadURL();
+      setFormOcorrencia({ ...formOcorrencia, ocorUrlFoto: urlDownload });
+    } else {
+      alert("Envio cancelado!");
     }
   };
 
-  const registrarOcorrencia = () => {
-    navigation.navigate("Ocorrencias"); 
+  const Enviar = () => {
+    alert("Ocorrência registrada!");
+    // Lógica de envio para o Firestore pode ser adicionada aqui
   };
 
-
-  const voltar =() =>{
-    navigation.replace('Menu', {screen: 'Ocorrencias'});
-  }
-
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={voltar}>
-          <Ionicons name="arrow-back" size={28} color="#fff" />
+    <KeyboardAvoidingView style={estilo.tela}>
+      <ScrollView>
+        {/* Header */}
+        <View style={estilo.header}>
+          <TouchableOpacity onPress={voltar}>
+            <Ionicons name="arrow-back" size={28} color="#fff" />
+          </TouchableOpacity>
+          <Image source={require("../assets/camera.png")} style={estilo.perfil} />
+          <Text style={estilo.nomeUsuario}>Júlia Martins</Text>
+        </View>
+
+        {/* Título */}
+        <View style={estilo.tituloContainer}>
+          <Ionicons name="call" size={32} color="#000" />
+          <Text style={estilo.titulo}>Registrar Ocorrência</Text>
+        </View>
+
+        {/* Categoria */}
+        <Text style={estilo.label}>CATEGORIA</Text>
+        <View style={estilo.input}>
+          <Picker
+            selectedValue={selecionado}
+            onValueChange={(itemValue) => setSelecionado(itemValue)}
+            dropdownIconColor="#000"
+          >
+            <Picker.Item label="Selecionar Categoria" value="" enabled={false} />
+            <Picker.Item label="Energia Elétrica" value="energia" />
+            <Picker.Item label="Água/Esgoto" value="agua" />
+            <Picker.Item label="Coleta de Lixo" value="lixo" />
+            <Picker.Item label="Buraco na Via" value="buraco" />
+            <Picker.Item label="Outros" value="outros" />
+          </Picker>
+        </View>
+
+        {/* Descrição */}
+        <Text style={estilo.label}>DESCRIÇÃO DO PROBLEMA</Text>
+        <TextInput
+          placeholder="Ex: Ficamos sem energia desde ontem à noite..."
+          placeholderTextColor="#333"
+          style={[estilo.input, estilo.textarea]}
+          multiline
+          onChangeText={(text) => setFormOcorrencia({ ...formOcorrencia, descricao: text })}
+        />
+
+        {/* Mapa */}
+        <Text style={estilo.label}>LOCALIZAÇÃO</Text>
+        <View style={estilo.mapa}>
+          <MapView
+            style={{ flex: 1 }}
+            region={region}
+            onRegionChangeComplete={(reg) => {
+              setRegion(reg);
+              setFormOcorrencia((prev) => ({
+                ...prev,
+                latitude: reg.latitude,
+                longitude: reg.longitude,
+              }));
+            }}
+          >
+            <Marker coordinate={{ latitude: region.latitude, longitude: region.longitude }} />
+          </MapView>
+        </View>
+
+        {/* Upload */}
+        <Text style={estilo.label}>ANEXAR FOTO</Text>
+        <TouchableOpacity style={estilo.upload} onPress={escolheFoto}>
+          <Ionicons name="camera" size={24} color="#000" />
+          <Text style={estilo.uploadText}>Upload de imagem</Text>
         </TouchableOpacity>
 
-        <Image source={require("../assets/julia.png")} style={styles.perfil} />
-        <Text style={styles.nomeUsuario}>Júlia Martins</Text>
-      </View>
+        {imagePath !== "" && (
+          <Image source={{ uri: imagePath }} style={estilo.preview} />
+        )}
 
-      {/* Título */}
-      <View style={styles.tituloContainer}>
-        <Ionicons name="call" size={32} color="#000" />
-        <Text style={styles.titulo}>Registrar Ocorrência</Text>
-      </View>
-
-      {/* Categoria */}
-      <Text style={styles.label}>CATEGORIA</Text>
-      <TouchableOpacity
-        style={styles.input}
-        onPress={() => setMostrarCategorias(!mostrarCategorias)}
-      >
-        <Text style={{ color: categoriaSelecionada ? "#000" : "#555" }}>
-          {categoriaSelecionada || "Selecionar Categoria"}
-        </Text>
-      </TouchableOpacity>
-
-      {mostrarCategorias && (
-        <View style={styles.categoriasContainer}>
-          {categorias.map((cat) => (
-            <TouchableOpacity
-              key={cat.id}
-              style={styles.categoriaItem}
-              onPress={() => {
-                setCategoriaSelecionada(cat.label);
-                setMostrarCategorias(false);
-              }}
-            >
-              <Ionicons name={cat.icon} size={18} color={cat.cor} />
-              <Text style={styles.categoriaTexto}>{cat.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
-
-      {/* Localização */}
-      <Text style={styles.label}>LOCALIZAÇÃO</Text>
-      <TextInput
-        placeholder="Av. Itália Nº322 - Centro - 96450-000"
-        placeholderTextColor="#333"
-        style={styles.input}
-      />
-
-      {/* Descrição */}
-      <Text style={styles.label}>DESCRIÇÃO DO PROBLEMA</Text>
-      <TextInput
-        placeholder="Ex: Ficamos sem energia desde ontem à noite, toda a quadra está no escuro."
-        placeholderTextColor="#333"
-        style={[styles.input, styles.textarea]}
-        multiline
-      />
-
-      {/* Upload */}
-      <Text style={styles.label}>ANEXAR FOTOS</Text>
-      <TouchableOpacity style={styles.upload} onPress={selecionarImagem}>
-        <Ionicons name="camera" size={24} color="#000" />
-        <Text style={styles.uploadText}>Upload de arquivos</Text>
-      </TouchableOpacity>
-
-      {imagemSelecionada && (
-        <Image source={{ uri: imagemSelecionada }} style={styles.preview} />
-      )}
-
-      {/* Botão */}
-      <TouchableOpacity style={styles.botao} onPress={registrarOcorrencia}>
-        <Text style={styles.textoBotao}>Registrar</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        {/* Botão */}
+        <TouchableOpacity style={estilo.botao} onPress={Enviar}>
+          <Text style={estilo.textoBotao}>Registrar</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
-export default NovaOcorrencia;
-
-const styles = StyleSheet.create({
-  container: {
-    paddingBottom: 100,
-    backgroundColor: "#EFFFF8",
-  },
-  header: {
-    backgroundColor: "#2196F3",
-    paddingTop: 80,
-    paddingBottom: 20,
-    paddingHorizontal: 25,
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomLeftRadius: 40,
-  },
-  nomeUsuario: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginLeft: 15,
-  },
-  perfil: {
-    width: 60,
-    height: 65,
-    borderRadius: 30,
-    borderWidth: 2,
-    borderColor: "#fff",
-    marginLeft: 10,
-  },
-  tituloContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 25,
-    marginHorizontal: 25,
-  },
-  titulo: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#000",
-    marginLeft: 10,
-  },
-  label: {
-    marginTop: 20,
-    marginBottom: 8,
-    fontWeight: "bold",
-    color: "#333",
-    marginHorizontal: 25,
-  },
-  input: {
-    backgroundColor: "#D9D9D9",
-    borderRadius: 30,
-    padding: 12,
-    fontSize: 14,
-    color: "#000",
-    marginHorizontal: 25,
-  },
-  textarea: {
-    height: 100,
-    textAlignVertical: "top",
-  },
-  upload: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#D9D9D9",
-    padding: 16,
-    borderRadius: 60,
-    gap: 10,
-    marginHorizontal: 25,
-  },
-  uploadText: {
-    fontWeight: "bold",
-    color: "#000",
-  },
-  preview: {
-    width: "90%",
-    height: 180,
-    alignSelf: "center",
-    marginTop: 10,
-    borderRadius: 20,
-  },
-  botao: {
-    backgroundColor: "#000",
-    alignSelf: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 25,
-    marginTop: 20,
-    marginBottom: 50,
-  },
-  textoBotao: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  categoriasContainer: {
-    marginTop: 10,
-    marginBottom: 10,
-    gap: 10,
-    marginHorizontal: 25,
-  },
-  categoriaItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#D9D9D9",
-    padding: 10,
-    borderRadius: 12,
-    gap: 10,
-  },
-  categoriaTexto: {
-    fontSize: 14,
-    color: "#000",
-  },
-});
+export default NovaOcorrencias;

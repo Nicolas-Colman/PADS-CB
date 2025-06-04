@@ -9,7 +9,9 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+
 import { Ionicons } from "@expo/vector-icons";
+
 
 const Empresas = () => {
   const navigation = useNavigation();
@@ -21,8 +23,10 @@ const Empresas = () => {
           <Ionicons name="arrow-back" size={28} color="#fff" />
         </TouchableOpacity>
 
+
         <Text style={styles.nome}>Júlia Martins</Text>
       </View>
+
 
       <ScrollView contentContainerStyle={styles.conteudo}>
         <View style={styles.iconeTitulo}>
@@ -92,7 +96,7 @@ const Empresas = () => {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-};
+};nova Ocorrencia
 
 export default Empresas;
 
@@ -111,7 +115,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 40,
   },
   nome: {
-    color: "#fff",
+    color: "#fff",nova Ocorrencia
     fontWeight: "bold",
     fontSize: 18,
   },

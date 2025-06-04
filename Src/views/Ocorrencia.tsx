@@ -90,6 +90,7 @@ const Ocorrencias = () => {
 
 export default Ocorrencias;
 
+
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 100,
