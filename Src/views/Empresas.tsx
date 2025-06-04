@@ -96,7 +96,7 @@ const Empresas = () => {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-};nova Ocorrencia
+}
 
 export default Empresas;
 
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 40,
   },
   nome: {
-    color: "#fff",nova Ocorrencia
+    color: "#fff",
     fontWeight: "bold",
     fontSize: 18,
   },
