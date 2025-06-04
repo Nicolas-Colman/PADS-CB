@@ -1,11 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import * as React from 'react';
 import { useState, useEffect } from "react";
-import { KeyboardAvoidingView, View, TextInput, Text, TouchableOpacity } from "react-native";
-import estilo from "../../estilo";
+import {
+    KeyboardAvoidingView,
+    View,
+    TextInput,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    Platform
+} from "react-native";
 import { auth, firestore } from '../../firebase';
-
-
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -14,31 +19,24 @@ const Login = () => {
     const navigation = useNavigation();
 
     const recSenha = () => {
-        navigation.replace('RecuperaSenha')
-    }
+        navigation.replace('RecuperaSenha');
+    };
 
     useEffect(() => {
         if (!email || !senha) {
-            setErro("Campos em branco")
+            setErro("Campos em branco");
+        } else if (!email.includes("@gmail.com")) {
+            setErro("Email inválido");
+        } else {
+            setErro("pass");
         }
-        else if (!email.includes("@gmail.com")) {
-            setErro("Email invalido")
-        }
-        else {
-            setErro("pass")
-        }
-
-
-    }, [email, senha])
-
+    }, [email, senha]);
 
     const Login = async () => {
-
-        if (erro == 'pass') {
+        if (erro === 'pass') {
             try {
                 const userCredential = await auth.signInWithEmailAndPassword(email, senha);
                 const user = userCredential.user;
-
 
                 const docSnap = await firestore
                     .collection("Perfil")
@@ -64,13 +62,10 @@ const Login = () => {
                 }
 
             } catch (error) {
-                alert("Usuario ou senha Invalidos");
-
+                alert("Usuário ou senha inválidos.");
             }
-        }
-        else if(erro !== 'pass'){
+        } else {
             alert(erro);
-
         }
     };
 
@@ -79,33 +74,123 @@ const Login = () => {
     };
 
     return (
-        <KeyboardAvoidingView style={estilo.tela}>
-            <View>
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+            <View style={styles.topContainer}>
+                <Text style={styles.logoText}>Comunica{'\n'}Bagé</Text>
+            </View>
+
+            <View style={styles.loginContainer}>
+                <Text style={styles.title}>Login</Text>
+
+                <Text style={styles.label}>E-mail</Text>
                 <TextInput
-                    placeholder="Email"
+                    style={styles.input}
+                    placeholder="julia@gmail.com"
+                    placeholderTextColor=""
                     onChangeText={setEmail}
                 />
+
+                <Text style={styles.label}>SENHA</Text>
                 <TextInput
-                    placeholder="Senha"
+                    style={styles.input}
+                    placeholder="********"
+                    placeholderTextColor="#666"
                     onChangeText={setSenha}
                     secureTextEntry
                 />
-            </View>
 
-            <View>
-                <TouchableOpacity onPress={Login}>
-                    <Text>Login</Text>
+                <TouchableOpacity style={styles.button} onPress={Login}>
+                    <Text style={styles.buttonText}>Log in</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={recSenha}>
+                    <Text style={styles.link}>Esqueceu sua senha?</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={Registrar}>
-                    <Text>Registrar-se</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={recSenha}>
-                    <Text>Esqueci minha senha?</Text>
+                    <Text style={styles.subLink}>Criar conta</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#2196F3',
+    },
+    topContainer: {
+        height: '35%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 50,
+    },
+    logoText: {
+        color: '#fff',
+        fontSize: 32,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    loginContainer: {
+        flex: 1,
+        backgroundColor: '#EFFFF8',
+        borderTopLeftRadius: 80,
+        paddingHorizontal: 30,
+        paddingTop: 40,
+        alignItems: 'stretch',
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#1B1B1F',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    label: {
+        fontSize: 12,
+        color: '#1B1B1F',
+        marginBottom: 5,
+        marginTop: 10,
+        fontWeight: '500',
+    },
+    input: {
+        backgroundColor: '#C5CCC9',
+        borderRadius: 12,
+        height: 48,
+        paddingHorizontal: 15,
+        fontSize: 14,
+        marginBottom: 10,
+        color: '#000',
+    },
+    button: {
+        backgroundColor: '#1B1B1F',
+        borderRadius: 10,
+        paddingVertical: 14,
+        marginTop: 10,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    link: {
+        color: '#1B1B1F',
+        textAlign: 'center',
+        fontSize: 14,
+        marginTop: 16,
+        fontWeight: '600',
+    },
+    subLink: {
+        color: '#1B1B1F',
+        textAlign: 'center',
+        fontSize: 12,
+        marginTop: 10,
+    },
+});
 
 export default Login;
