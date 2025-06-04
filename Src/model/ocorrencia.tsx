@@ -4,6 +4,7 @@ export class Ocorrencia {
     public ocorId           : string    | undefined;
     public ocorLocalizacao  : string    | undefined;
     public userId           : string    | undefined;
+    public ocorUrlFoto      : string    | undefined;
     
     constructor(obj?: Partial<Ocorrencia>){
         if (obj){
@@ -12,6 +13,7 @@ export class Ocorrencia {
             this.ocorId             = obj.ocorId
             this.ocorLocalizacao    = obj.ocorLocalizacao
             this.userId             = obj.userId
+            this.ocorUrlFoto        = obj.ocorUrlFoto
         }
     }
 
@@ -22,6 +24,7 @@ export class Ocorrencia {
             "ocorId"            : "${this.ocorId}
             "ocorLocalizacao"   : "${this.ocorLocalizacao}",
             "userId"            : "${this.userId}"
+            "ocorUrlFoto"       : "${this.ocorUrlFoto}"
         }`
         return objeto
     }
@@ -32,7 +35,8 @@ export class Ocorrencia {
             ocorDescricao       : this.ocorDescricao,
             ocorId              : this.ocorId,
             ocorLocalizacao     : this.ocorLocalizacao,
-            userId              : this.userId
+            userId              : this.userId,
+            ocorUrlFoto         : this.ocorUrlFoto
             
         }
         return ocorrencia

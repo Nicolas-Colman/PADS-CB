@@ -6,16 +6,22 @@ import estilo from "../../estilo"
 
 const Ocorrencias = () => {
 
-   
+    const navigation = useNavigation();
+    
+    const NovaOcorrencia = () => {
+        navigation.replace('NovaOcorrencia')
+    }
 
-    return  (
-                <KeyboardAvoidingView  style={estilo.tela}>
-                    <View>
-                        <Text>Ocorrencias</Text>
-                    </View>
-                    
-                </KeyboardAvoidingView>
-            )
+    return (
+        <KeyboardAvoidingView style={estilo.tela}>
+            <View>
+                <Text>Ocorrencias</Text>
+            </View>
+            <TouchableOpacity onPress={NovaOcorrencia}>
+                <Text>Criar Ocorrencia</Text>
+            </TouchableOpacity>
+        </KeyboardAvoidingView>
+    )
 }
 
 export default Ocorrencias;
