@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "pads",
+    "slug": "pads",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./Src/assets/camera.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./Src/assets/camera.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./Src/assets/camera.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
