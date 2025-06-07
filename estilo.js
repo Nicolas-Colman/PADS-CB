@@ -1,18 +1,19 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-
     tela: {
         marginTop: 45,
         flex: 1,
         alignItems: "center",
-
-
     },
+    container: {
+    paddingBottom: 100,
+    backgroundColor: "#EFFFF8",
+  },
 
     imagemView: {
         alignContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     },
 
     imagemPerfil: {
@@ -38,10 +39,10 @@ export default StyleSheet.create({
 
     msg: {
         fontSize: 40,
-        color: 'grey',
+        color: "grey",
     },
-    // mapa
 
+    // Mapa
     containerMapa: {
         width: "100%",
         height: 150,
@@ -53,28 +54,8 @@ export default StyleSheet.create({
         color: "blue",
         marginVertical: 5,
     },
-    input: {
-        borderWidth: 1,
-        borderColor: "#999",
-        borderRadius: 5,
-        padding: 8,
-        marginVertical: 5,
-        fontSize: 14,
-    },
-    botaoEnviar: {
-        backgroundColor: "#007AFF",
-        paddingVertical: 12,
-        borderRadius: 8,
-        alignItems: "center",
-        marginTop: 15,
-    },
-    textoBotao: {
-        color: "#fff",
-        fontWeight: "bold",
-        fontSize: 16,
-    },
-    // nova Ocorrencia
 
+    // Nova Ocorrencia
     header: {
         backgroundColor: "#2196F3",
         paddingTop: 80,
@@ -169,5 +150,119 @@ export default StyleSheet.create({
         color: "#fff",
         fontWeight: "bold",
         fontSize: 16,
+    },
+
+    // Adição dos botões que você pediu
+    botaoBuscarEndereco: {
+        backgroundColor: "#007AFF",
+        padding: 12,
+        borderRadius: 8,
+        alignItems: "center",
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    textoBotaoBuscar: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
+    botaoCentralizar: {
+        backgroundColor: "#6A5ACD",
+        padding: 12,
+        borderRadius: 8,
+        alignItems: "center",
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    textoBotaoCentralizar: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
+
+    header: {
+        backgroundColor: "#2196F3",
+        paddingTop: 80,
+        paddingBottom: 20,
+        paddingHorizontal: 25,
+        flexDirection: "row",
+        alignItems: "center",
+        borderBottomLeftRadius: 40,
+    },
+    nomeUsuario: {
+        color: "#fff",
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginLeft: 15,
+    },
+    perfil: {
+        width: 60,
+        height: 65,
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: "#fff",
+    },
+    tituloContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 25,
+        marginHorizontal: 25,
+    },
+    titulo: {
+        fontSize: 30,
+        fontWeight: "bold",
+        color: "#000",
+        marginLeft: 10,
+    },
+    buscaContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#D9D9D9",
+        marginHorizontal: 20,
+        borderRadius: 18,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        marginTop: 18,
+    },
+    inputBusca: {
+        marginLeft: 10,
+        fontSize: 16,
+        flex: 1,
+        color: "#000",
+    },
+    listaContainer: {
+        marginTop: 30,
+        marginHorizontal: 20,
+    },
+    categoria: {
+        fontWeight: "bold",
+        fontSize: 14,
+        marginBottom: 10,
+        color: "#000",
+    },
+    card: {
+        backgroundColor: "#D9D9D9",
+        padding: 12,
+        borderRadius: 20,
+        marginBottom: 25,
+    },
+    reacoes: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        marginTop: 10,
+        gap: 15,
+    },
+    botaoNovaOcorrencia: {
+        backgroundColor: "#000",
+        alignSelf: "center",
+        paddingHorizontal: 24,
+        paddingVertical: 12,
+        borderRadius: 25,
+        marginTop: 2,
+        marginBottom: 50,
+    },
+    textoBotao: {
+        color: "#fff",
+        fontWeight: "bold",
     },
 });
