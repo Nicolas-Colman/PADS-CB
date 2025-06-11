@@ -88,7 +88,7 @@ const Login = () => {
                 <Text style={styles.label}>E-mail</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="julia@gmail.com"
+                    placeholder="exemplo@gmail.com"
                     placeholderTextColor=""
                     onChangeText={setEmail}
                 />

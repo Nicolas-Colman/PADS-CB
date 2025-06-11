@@ -16,6 +16,7 @@ import { Usuario } from "../model/Usuario";
 import { auth, firestore, storage } from "../../firebase";
 import { uploadBytes } from "firebase/storage";
 import * as ImagePicker from "expo-image-picker";
+import estilo from "../../estilo";
 
 const Cadastro = () => {
     const [formUsuario, setFormUsuario] = useState<Partial<Usuario>>({});
@@ -113,35 +114,35 @@ const Cadastro = () => {
     };
 
     return (
-        <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
-            <View style={styles.topContainer}>
-                <TouchableOpacity onPress={() => navigation.replace("Login")} style={styles.backButton}>
-                    <Text style={styles.backText}>←</Text>
+        <KeyboardAvoidingView style={estilo.cadContainer} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+            <View style={estilo.topCadContainer}>
+                <TouchableOpacity onPress={() => navigation.replace("Login")} style={estilo.backButton}>
+                    <Text style={estilo.backText}>←</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.formContainer}>
-                <Text style={styles.title}>Cadastro</Text>
+            <View style={estilo.formContainer}>
+                <Text style={estilo.title}>Cadastro</Text>
 
-                <Pressable onPress={escolheFoto} style={styles.imagePicker}>
+                <Pressable onPress={escolheFoto} style={estilo.imagePicker}>
                     {imagePath ? (
-                        <Image source={{ uri: imagePath }} style={styles.profileImage} />
+                        <Image source={{ uri: imagePath }} style={estilo.profileImage} />
                     ) : (
-                        <Image source={require("../assets/camera.png")} style={styles.profileImage} />
+                        <Image source={require("../assets/camera.png")} style={estilo.profileImage} />
                     )}
                 </Pressable>
 
-                <Text style={styles.label}>NOME</Text>
+                <Text style={estilo.label}>NOME</Text>
                 <TextInput
-                    style={styles.input}
+                    style={estilo.input}
                     placeholder="Júlia Martins"
                     value={formUsuario.userNome || ""}
                     onChangeText={(text) => setFormUsuario({ ...formUsuario, userNome: text })}
                 />
 
-                <Text style={styles.label}>E-MAIL</Text>
+                <Text style={estilo.label}>E-MAIL</Text>
                 <TextInput
-                    style={styles.input}
+                    style={estilo.input}
                     placeholder="julia@gmail.com"
                     value={formUsuario.userEmail || ""}
                     onChangeText={(text) => setFormUsuario({ ...formUsuario, userEmail: text })}
@@ -149,104 +150,27 @@ const Cadastro = () => {
                     autoCapitalize="none"
                 />
 
-                <Text style={styles.label}>SENHA</Text>
+                <Text style={estilo.label}>SENHA</Text>
                 <TextInput
-                    style={styles.input}
+                    style={estilo.input}
                     placeholder="******"
                     secureTextEntry
                     value={formUsuario.userSenha || ""}
                     onChangeText={(text) => setFormUsuario({ ...formUsuario, userSenha: text })}
                 />
 
-                <TouchableOpacity style={styles.button} onPress={Registro}>
-                    <Text style={styles.buttonText}>Cadastrar</Text>
+                <TouchableOpacity style={estilo.button} onPress={Registro}>
+                    <Text style={estilo.buttonText}>Cadastrar</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => navigation.replace("Login")}>
-                    <Text style={styles.loginLink}>Já está cadastrado?{"\n"}Faça login aqui.</Text>
+                    <Text style={estilo.loginLink}>Já está cadastrado?{"\n"}Faça login aqui.</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#2196F3",
-    },
-    topContainer: {
-        height: '20%',
-        justifyContent: 'center',
-        paddingLeft: 20,
-    },
-    backButton: {
-        width: 60,
-        height: 60,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    backText: {
-        fontSize: 60,
-        color: "#fff",
-    },
-    formContainer: {
-        flex: 1,
-        backgroundColor: "#EFFFF8",
-        borderTopLeftRadius: 130,
-        padding: 50,
-        alignItems: "center",
-    },
-    title: {
-        fontSize: 48,
-        fontWeight: "bold",
-        color: "#1B1B1F",
-        marginBottom: 20,
-    },
-    imagePicker: {
-        marginBottom: 18,
-    },
-    profileImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 30,
-    },
-    label: {
-        alignSelf: "flex-start",
-        marginTop: 10,
-        marginBottom: 8,
-        color: "#1B1B1F",
-        fontWeight: "bold",
-        fontSize: 12,
-    },
-    input: {
-        width: "100%",
-        height: 48,
-        backgroundColor: "#C5CCC9",
-        borderRadius: 12,
-        paddingHorizontal: 15,
-        marginBottom: 10,
-        color: "#000",
-    },
-    button: {
-        width: "100%",
-        backgroundColor: "#1B1B1F",
-        borderRadius: 10,
-        paddingVertical: 14,
-        alignItems: "center",
-        marginTop: 10,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 16,
-        fontWeight: "600",
-    },
-    loginLink: {
-        color: "#1B1B1F",
-        fontSize: 14,
-        textAlign: "center",
-        marginTop: 16,
-    },
-});
+
 
 export default Cadastro;

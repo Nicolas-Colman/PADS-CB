@@ -10,23 +10,25 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import MapView, { Marker } from "react-native-maps";
+import MapView from "react-native-maps";
 import * as Location from "expo-location";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
-import { Ocorrencia } from "../model/ocorrencia";
-import { firestore, storage } from "../../firebase";
+import { Ocorrencia} from "../model/ocorrencia";
+import { firestore, storage, auth } from "../../firebase";
 import { uploadBytes } from "firebase/storage";
-import estilo from "../../estilo"
+import estilo from "../../estilo";
 
 const NovaOcorrencias = () => {
   const navigation = useNavigation();
   const [formOcorrencia, setFormOcorrencia] = useState<Partial<Ocorrencia>>({});
   const [selecionado, setSelecionado] = useState<string>('');
   const [imagePath, setImagePath] = useState('');
+  const [locUser, setLocUser] = useState<string>('');
+  const [locMapa, setLocMapa] = useState<{ latitude: number; longitude: number }>({ latitude: 0, longitude: 0 });
   const refOcorrencia = firestore.collection("Ocorrencia/OcorrenciaDoc/Ocorrencia");
-
+  const refUser =firestore.collection("/Perfil/ClienteDoc/Cliente").doc(auth.currentUser?.uid);
   const [region, setRegion] = useState({
     latitude: -30.0346,
     longitude: -51.2177,
@@ -48,6 +50,11 @@ const NovaOcorrencias = () => {
         longitude: location.coords.longitude,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
+      });
+
+      setLocMapa({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
       });
 
       setFormOcorrencia((prev) => ({
@@ -107,15 +114,50 @@ const NovaOcorrencias = () => {
       alert("Envio cancelado!");
     }
   };
+  const Limpar = () => {
+        setFormOcorrencia({})
+    }
 
-  const Enviar = () => {
-    alert("Ocorrência registrada!");
-    // Lógica de envio para o Firestore pode ser adicionada aqui
+  const Enviar = async () => {
+    const ocorrencia = new Ocorrencia(formOcorrencia);
+    const docUser = await refUser.get();
+    const dataUser = docUser.data();
+    ocorrencia.ocorUrlFoto = dataUser?.ocorUrlFoto;
+    ocorrencia.userId = auth.currentUser?.uid;
+
+    if (ocorrencia.ocorId === undefined){
+            const refIdOcor = refOcorrencia.doc();
+            ocorrencia.ocorId = refIdOcor.id;
+
+            refIdOcor.set(ocorrencia.toFirestore())
+            .then(() =>{
+                alert("publicação criada com sucesso");
+                Limpar();
+            
+            })
+      }
+    // else {
+    //         const refIdOcor = refOcorrencia.doc(ocorrencia.ocorId);
+
+    //         refIdOcor.update(ocorrencia.toFirestore())
+    //         .then(() => {
+    //             alert(ocorrencia.ocorDescricao + " atualizado com sucesso!");
+    //             Limpar();
+    //         })
+    //     }
+
+
+    // Alert.alert(
+    //   "Dados da Ocorrência",
+    //   `Endereço digitado: ${locUser}\n\nLocalização no mapa:\nLatitude: ${locMapa.latitude}\nLongitude: ${locMapa.longitude}`
+    // );
+
   };
 
   return (
-    <KeyboardAvoidingView style={estilo.tela}>
-      <ScrollView>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#EAF8F7' }}>
+      <ScrollView style={estilo.scrollContainer}>
+
         {/* Header */}
         <View style={estilo.header}>
           <TouchableOpacity onPress={voltar}>
@@ -135,9 +177,12 @@ const NovaOcorrencias = () => {
         <Text style={estilo.label}>CATEGORIA</Text>
         <View style={estilo.input}>
           <Picker
-            selectedValue={selecionado}
-            onValueChange={(itemValue) => setSelecionado(itemValue)}
+            selectedValue={formOcorrencia.ocorTipo}
+            onValueChange={(itemValue) =>
+              setFormOcorrencia({ ...formOcorrencia, ocorTipo: itemValue })
+            }
             dropdownIconColor="#000"
+
           >
             <Picker.Item label="Selecionar Categoria" value="" enabled={false} />
             <Picker.Item label="Energia Elétrica" value="energia" />
@@ -155,26 +200,53 @@ const NovaOcorrencias = () => {
           placeholderTextColor="#333"
           style={[estilo.input, estilo.textarea]}
           multiline
-          onChangeText={(text) => setFormOcorrencia({ ...formOcorrencia, descricao: text })}
+          value={formOcorrencia.ocorDescricao}
+          onChangeText={(text) => setFormOcorrencia({ ...formOcorrencia, ocorDescricao: text })}
+        />
+
+        {/* Endereço manual */}
+        <Text style={estilo.label}>ENDEREÇO</Text>
+        <TextInput
+          placeholder="Digite seu endereço"
+          placeholderTextColor="#333"
+          style={estilo.input}
+          value={formOcorrencia.ocorEndereco}
+          onChangeText={texto => setFormOcorrencia({ ...formOcorrencia, ocorEndereco: texto })}
         />
 
         {/* Mapa */}
         <Text style={estilo.label}>LOCALIZAÇÃO</Text>
         <View style={estilo.mapa}>
           <MapView
+            showsUserLocation={true}
+            showsMyLocationButton={true}
             style={{ flex: 1 }}
             region={region}
             onRegionChangeComplete={(reg) => {
               setRegion(reg);
-              setFormOcorrencia((prev) => ({
-                ...prev,
+              setLocMapa({
                 latitude: reg.latitude,
                 longitude: reg.longitude,
+              });
+              setFormOcorrencia((prev) => ({
+                ...prev,
+                ocorLatitude: reg.latitude,
+                ocorLongitude: reg.longitude,
               }));
             }}
+          />
+          {/* Pin fixo no centro */}
+          <View
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              marginLeft: -24,
+              marginTop: -48,
+            }}
           >
-            <Marker coordinate={{ latitude: region.latitude, longitude: region.longitude }} />
-          </MapView>
+            <Image source={require("../assets/pin.png")} style={{ width: 20, height: 20 }} />
+          </View>
         </View>
 
         {/* Upload */}
