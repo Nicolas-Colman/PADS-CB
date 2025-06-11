@@ -116,16 +116,19 @@ const NovaOcorrencias = () => {
   };
 
   const Enviar = () => {
+
+
     Alert.alert(
       "Dados da Ocorrência",
       `Endereço digitado: ${locUser}\n\nLocalização no mapa:\nLatitude: ${locMapa.latitude}\nLongitude: ${locMapa.longitude}`
     );
-    
+
   };
 
   return (
-    <KeyboardAvoidingView style={estilo.container}>
-      <ScrollView>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#EAF8F7' }}>
+      <ScrollView style={estilo.scrollContainer}>
+
         {/* Header */}
         <View style={estilo.header}>
           <TouchableOpacity onPress={voltar}>
@@ -145,9 +148,12 @@ const NovaOcorrencias = () => {
         <Text style={estilo.label}>CATEGORIA</Text>
         <View style={estilo.input}>
           <Picker
-            selectedValue={selecionado}
-            onValueChange={(itemValue) => setSelecionado(itemValue)}
+            selectedValue={formOcorrencia.ocorTipo}
+            onValueChange={(itemValue) =>
+              setFormOcorrencia({ ...formOcorrencia, ocorTipo: itemValue })
+            }
             dropdownIconColor="#000"
+
           >
             <Picker.Item label="Selecionar Categoria" value="" enabled={false} />
             <Picker.Item label="Energia Elétrica" value="energia" />
@@ -165,7 +171,8 @@ const NovaOcorrencias = () => {
           placeholderTextColor="#333"
           style={[estilo.input, estilo.textarea]}
           multiline
-          onChangeText={(text) => setFormOcorrencia({ ...formOcorrencia, descricao: text })}
+          value={formOcorrencia.ocorDescricao}
+          onChangeText={(text) => setFormOcorrencia({ ...formOcorrencia, ocorDescricao: text })}
         />
 
         {/* Endereço manual */}
@@ -174,8 +181,8 @@ const NovaOcorrencias = () => {
           placeholder="Digite seu endereço"
           placeholderTextColor="#333"
           style={estilo.input}
-          value={locUser}
-          onChangeText={(text) => setLocUser(text)}
+          value={formOcorrencia.ocorEndereco}
+          onChangeText={texto => setFormOcorrencia({ ...formOcorrencia, ocorEndereco: texto })}
         />
 
         {/* Mapa */}
@@ -194,8 +201,8 @@ const NovaOcorrencias = () => {
               });
               setFormOcorrencia((prev) => ({
                 ...prev,
-                latitude: reg.latitude,
-                longitude: reg.longitude,
+                ocorLatitude: reg.latitude,
+                ocorLongitude: reg.longitude,
               }));
             }}
           />
@@ -205,8 +212,8 @@ const NovaOcorrencias = () => {
               position: "absolute",
               top: "50%",
               left: "50%",
-              marginLeft: -24, 
-              marginTop: -48,  
+              marginLeft: -24,
+              marginTop: -48,
             }}
           >
             <Image source={require("../assets/pin.png")} style={{ width: 20, height: 20 }} />

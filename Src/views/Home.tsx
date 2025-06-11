@@ -6,41 +6,78 @@ import {
     Image,
     StyleSheet,
     Dimensions,
-    ScrollView
+    ScrollView,
+    TouchableOpacity,
+    Modal
 } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
+import estilo from "../../estilo";
 
 const { width } = Dimensions.get("window");
 
 const Home = () => {
     const navigation = useNavigation();
+    const [menuVisible, setMenuVisible] = React.useState(false);
+
+    const handleLogout = () => {
+        setMenuVisible(false);
+        navigation.navigate("Login")
+    };
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.container}>
+        <ScrollView contentContainerStyle={estilo.scrollContainer}>
+            <View style={estilo.container}>
+                {/* BOTÃO DE MENU FIXO NO TOPO */}
+                <View style={estilo.logout}>
+                    <TouchableOpacity
+                        style={estilo.menuButton}
+                        onPress={() => setMenuVisible(true)}
+                    >
+                        <Ionicons name="menu" size={28} color="#fff" />
+                    </TouchableOpacity>
+                </View>
+                {/* MENU MODAL */}
+                <Modal
+                    transparent
+                    visible={menuVisible}
+                    animationType="fade"
+                    onRequestClose={() => setMenuVisible(false)}
+                >
+                    <TouchableOpacity
+                        style={estilo.modalOverlay}
+                        onPress={() => setMenuVisible(false)}
+                        activeOpacity={1}
+                    >
+                        <View style={estilo.menuContainer}>
+                            <TouchableOpacity
+                                style={estilo.menuItem}
+                                onPress={handleLogout}
+                            >
+                                <Text style={estilo.menuText}>Sair</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+                
+
                 {/* TOPO - TÍTULO + PERFIL */}
-                <View style={styles.header}>
-                    <View>
-                        <Text style={styles.tituloApp}>Comunica Bagé</Text>
-                        <Text style={styles.nomeUsuario}>Júlia Martins</Text>
-                    </View>
-                    <Image
-                        source={require("../assets/julia.png")}
-                        style={styles.perfil}
-                    />
+                <View style={estilo.header}>
+                    <Image source={require("../assets/camera.png")} style={estilo.perfil} />
+                    <Text style={estilo.nomeUsuario}>Júlia Martins</Text>
                 </View>
 
                 {/* IMAGEM CENTRAL */}
                 <Image
                     source={require("../assets/museu.png")}
-                    style={styles.imagemCentral}
+                    style={estilo.imagemCentral}
                     resizeMode="cover"
                 />
 
                 {/* CARD COM TEXTO */}
-                <View style={styles.cardTexto}>
-                    <Text style={styles.texto}>
-                        O Comunica Bagé conecta você aos serviços públicos da cidade, 
-                        promovendo mais facilidade, agilidade e participação ativa da 
+                <View style={estilo.cardTexto}>
+                    <Text style={estilo.texto}>
+                        O Comunica Bagé conecta você aos serviços públicos da cidade,
+                        promovendo mais facilidade, agilidade e participação ativa da
                         população na identificação e resolução dos desafios do dia a dia.
                     </Text>
                 </View>
@@ -50,59 +87,3 @@ const Home = () => {
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-    scrollContainer: {
-        flexGrow: 1,
-        backgroundColor: "#EFFFF8",
-    },
-    container: {
-        paddingBottom: 100, // espaço para não encostar no menu do app
-    },
-    header: {
-        backgroundColor: "#2196F3",
-        paddingTop: 120,
-        paddingBottom: 30,
-        paddingHorizontal: 28,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderBottomLeftRadius: 50,
-    },
-    tituloApp: {
-        color: "#fff",
-        fontSize: 26,
-        fontWeight: "bold",
-    },
-    nomeUsuario: {
-        color: "#fff",
-        fontSize: 16,
-        marginTop: 10,
-    },
-    perfil: {
-        width: 75,
-        height: 90,
-        borderRadius:15,
-        borderWidth: 2,
-        borderColor: "#fff",
-    },
-    imagemCentral: {
-        width: width * 0.85,
-        height: 250,
-        borderRadius: 50,
-        alignSelf: "center",
-        marginTop: 60,
-    },
-    cardTexto: {
-        backgroundColor: "#B2E3FF",
-        marginHorizontal: 35,
-        marginTop: 50,
-        borderRadius: 30,
-        padding: 20,
-    },
-    texto: {
-        fontSize: 14,
-        fontFamily: "monospace",
-        textAlign: "center",
-    },
-});

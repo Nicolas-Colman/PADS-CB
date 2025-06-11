@@ -23,7 +23,7 @@ const Ocorrencias = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={estilo.container}>
+    <ScrollView contentContainerStyle={estilo.scrollContainer}>
       {/* TOPO */}
       <View style={estilo.header}>
         <TouchableOpacity onPress={() => navigation.replace('Menu')}>

@@ -7,9 +7,12 @@ export default StyleSheet.create({
         alignItems: "center",
     },
     container: {
-    paddingBottom: 100,
-    backgroundColor: "#EFFFF8",
-  },
+        // paddingBottom: 100,
+        backgroundColor: "#EFFFF8",
+    },
+    logout:{
+    
+    },
 
     imagemView: {
         alignContent: "center",
@@ -65,12 +68,6 @@ export default StyleSheet.create({
         alignItems: "center",
         borderBottomLeftRadius: 40,
     },
-    nomeUsuario: {
-        color: "#fff",
-        fontSize: 20,
-        fontWeight: "bold",
-        marginLeft: 15,
-    },
     perfil: {
         width: 60,
         height: 65,
@@ -91,21 +88,21 @@ export default StyleSheet.create({
         color: "#000",
         marginLeft: 10,
     },
-    label: {
-        marginTop: 20,
-        marginBottom: 8,
-        fontWeight: "bold",
-        color: "#333",
-        marginHorizontal: 25,
-    },
-    input: {
-        backgroundColor: "#D9D9D9",
-        borderRadius: 30,
-        padding: 12,
-        fontSize: 14,
-        color: "#000",
-        marginHorizontal: 25,
-    },
+    // label: {
+    //     marginTop: 20,
+    //     marginBottom: 8,
+    //     fontWeight: "bold",
+    //     color: "#333",
+    //     marginHorizontal: 25,
+    // },
+    // input: {
+    //     backgroundColor: "#D9D9D9",
+    //     borderRadius: 30,
+    //     padding: 12,
+    //     fontSize: 14,
+    //     color: "#000",
+    //     marginHorizontal: 25,
+    // },
     textarea: {
         height: 100,
         textAlignVertical: "top",
@@ -152,7 +149,7 @@ export default StyleSheet.create({
         fontSize: 16,
     },
 
-    // Adição dos botões que você pediu
+
     botaoBuscarEndereco: {
         backgroundColor: "#007AFF",
         padding: 12,
@@ -180,34 +177,14 @@ export default StyleSheet.create({
         fontWeight: "bold",
     },
 
-    header: {
-        backgroundColor: "#2196F3",
-        paddingTop: 80,
-        paddingBottom: 20,
-        paddingHorizontal: 25,
-        flexDirection: "row",
-        alignItems: "center",
-        borderBottomLeftRadius: 40,
-    },
+
     nomeUsuario: {
-        color: "#fff",
+        color: 'white',
         fontWeight: 'bold',
         fontSize: 20,
         marginLeft: 15,
     },
-    perfil: {
-        width: 60,
-        height: 65,
-        borderRadius: 30,
-        borderWidth: 2,
-        borderColor: "#fff",
-    },
-    tituloContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 25,
-        marginHorizontal: 25,
-    },
+
     titulo: {
         fontSize: 30,
         fontWeight: "bold",
@@ -264,5 +241,213 @@ export default StyleSheet.create({
     textoBotao: {
         color: "#fff",
         fontWeight: "bold",
+    },
+    //-------------Home.tsx------------------
+    scrollContainer: {
+        flexGrow: 1,
+        backgroundColor: "#EFFFF8",
+    },
+    menuButton: {
+        position: 'absolute',
+        top: 60,
+        right: 'auto',
+        zIndex: 10,
+        backgroundColor: "#2196F3",
+        padding: 6,
+        borderRadius: 10,
+    },
+    tituloApp: {
+        color: "#fff",
+        fontSize: 26,
+        fontWeight: "bold",
+    },
+
+
+    imagemCentral: {
+        width: '80%',
+        height: 190,
+        borderRadius: 40,
+        alignSelf: "center",
+        marginTop: 70,
+    },
+    cardTexto: {
+        backgroundColor: "#B2E3FF",
+        marginHorizontal: 35,
+        marginTop: 60,
+        borderRadius: 30,
+        padding: 20,
+    },
+    texto: {
+        fontSize: 14,
+        fontFamily: "monospace",
+        textAlign: "center",
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.3)",
+        justifyContent: "flex-start",
+        alignItems: "flex-end",
+        paddingTop: 45,
+        paddingRight: 10,
+    },
+    menuContainer: {
+        backgroundColor: "#fff",
+        padding: 15,
+        borderRadius: 10,
+        elevation: 5,
+    },
+    menuItem: {
+        paddingVertical: 10,
+    },
+    menuText: {
+        fontSize: 16,
+        color: "#2196F3",
+        fontWeight: "bold",
+    },
+
+    //--------------- recuperar senha -------
+    containerRec: {
+        flex: 1,
+        backgroundColor: '#2196F3',
+    },
+    topContainerRec: {
+        flex: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 50,
+    },
+    titleRec: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: '#fff',
+        textAlign: 'center',
+        marginBottom: 6,
+    },
+    subtitleRec: {
+        fontSize: 14,
+        color: '#fff',
+        textAlign: 'center',
+        lineHeight: 20,
+    },
+    formContainerRec: {
+        flex: 3,
+        backgroundColor: '#EFFFF8',
+        borderTopLeftRadius: 60,
+        padding: 40,
+        alignItems: 'stretch',
+    },
+    labelRec: {
+        fontSize: 15,
+        color: '#1B1B1F',
+        marginBottom: 15,
+        fontWeight: '500',
+    },
+    inputRec: {
+        backgroundColor: '#F2F2F2',
+        borderRadius: 10,
+        height: 48,
+        paddingHorizontal: 15,
+        fontSize: 14,
+        color: '#000',
+        marginBottom: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#BDBDBD',
+    },
+    buttonRec: {
+        backgroundColor: '#000',
+        borderRadius: 90,
+        paddingVertical: 14,
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    buttonTextRec: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 15,
+    },
+    linkRec: {
+        color: '#1B1B1F',
+        textAlign: 'center',
+        fontSize: 15,
+        textDecorationLine: 'underline',
+    },
+
+    //----------- cadastro.tsx----------
+    cadContainer: {
+        flex: 1,
+        backgroundColor: "#2196F3",
+    },
+    topCadContainer: {
+        height: '20%',
+        justifyContent: 'center',
+        paddingLeft: 20,
+    },
+    backButton: {
+        width: 60,
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    backText: {
+        fontSize: 60,
+        color: "#fff",
+    },
+    formContainer: {
+        flex: 1,
+        backgroundColor: "#EFFFF8",
+        borderTopLeftRadius: 130,
+        padding: 50,
+        alignItems: "center",
+    },
+    titleCad: {
+        fontSize: 48,
+        fontWeight: "bold",
+        color: "#1B1B1F",
+        marginBottom: 20,
+    },
+    imagePicker: {
+        marginBottom: 18,
+    },
+    profileImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 30,
+    },
+    label: {
+        alignSelf: "flex-start",
+        marginTop: 10,
+        marginBottom: 8,
+        color: "#1B1B1F",
+        fontWeight: "bold",
+        fontSize: 12,
+        marginHorizontal: 20
+    },
+    input: {
+        width: "90%",
+        marginHorizontal: 20,
+        backgroundColor: "#C5CCC9",
+        borderRadius: 12,
+        paddingHorizontal: 15,
+        marginBottom: 10,
+        color: "#000",
+    },
+    button: {
+        width: "100%",
+        backgroundColor: "#1B1B1F",
+        borderRadius: 10,
+        paddingVertical: 14,
+        alignItems: "center",
+        marginTop: 10,
+    },
+    buttonText: {
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    loginLink: {
+        color: "#1B1B1F",
+        fontSize: 14,
+        textAlign: "center",
+        marginTop: 16,
     },
 });

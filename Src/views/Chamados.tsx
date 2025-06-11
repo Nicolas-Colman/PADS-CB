@@ -10,6 +10,7 @@ import {
   Image
 } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import estilo from '../../estilo';
 
 const Chamados = () => {
   const navigation = useNavigation();
@@ -19,41 +20,21 @@ const Chamados = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#EAF8F7' }}>
+    <KeyboardAvoidingView style={estilo.container}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 
         {/* TOPO */}
-        <View style={{
-          backgroundColor: "#2196F3",
-          paddingTop: 80,
-          paddingBottom: 20,
-          paddingHorizontal: 25,
-          flexDirection: "row",
-          alignItems: "center",
-          borderBottomLeftRadius: 40,
-        }}>
+        <View style={estilo.header}>
           <TouchableOpacity onPress={() => navigation.replace("Menu")}>
             <Ionicons name="arrow-back" size={28} color="#fff" />
           </TouchableOpacity>
 
           <Image
             source={require('../assets/julia.png')}
-            style={{
-              width: 60,
-              height: 65,
-              borderRadius: 30,
-              borderWidth: 2,
-              borderColor: "#fff",
-              marginLeft: 15,
-            }}
+            style={estilo.perfil}
           />
 
-          <Text style={{
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: 20,
-            marginLeft: 15,
-          }}>
+          <Text style={estilo.nomeUsuario}>
             Júlia Martins
           </Text>
         </View>

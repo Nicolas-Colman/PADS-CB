@@ -1,7 +1,9 @@
 export class Ocorrencia {
     public ocorDataRegistro : Date      | undefined;
     public ocorDescricao    : string    | undefined;
+    public ocorTipo         : string    | undefined;
     public ocorId           : string    | undefined;
+    public ocorEndereco     : string    | undefined;
     public ocorLocalizacao  : string    | undefined;
     public userId           : string    | undefined;
     public ocorUrlFoto      : string    | undefined;
@@ -11,7 +13,9 @@ export class Ocorrencia {
             this.ocorDataRegistro   = obj.ocorDataRegistro
             this.ocorDescricao      = obj.ocorDescricao
             this.ocorId             = obj.ocorId
+            this.ocorTipo           = obj.ocorTipo 
             this.ocorLocalizacao    = obj.ocorLocalizacao
+            this.ocorEndereco       = obj.ocorEndereco
             this.userId             = obj.userId
             this.ocorUrlFoto        = obj.ocorUrlFoto
         }
@@ -22,7 +26,9 @@ export class Ocorrencia {
             "ocorDataRegistro"  : "${this.ocorDataRegistro}",
             "ocorDescricao"     : "${this.ocorDescricao}",
             "ocorId"            : "${this.ocorId}
+            "ocorTipo"          : "${this.ocorTipo}
             "ocorLocalizacao"   : "${this.ocorLocalizacao}",
+            "ocorEndereco"      : "${this.ocorEndereco}",
             "userId"            : "${this.userId}"
             "ocorUrlFoto"       : "${this.ocorUrlFoto}"
         }`
@@ -34,7 +40,9 @@ export class Ocorrencia {
             ocorDataRegistro    : this.ocorDataRegistro,
             ocorDescricao       : this.ocorDescricao,
             ocorId              : this.ocorId,
-            ocorLocalizacao     : this.ocorLocalizacao,
+            ocorTipo            : this.ocorTipo,
+            ocorLocalizacao     : this.ocorLocalizacao, 
+            ocorEndereco        : this.ocorEndereco, 
             userId              : this.userId,
             ocorUrlFoto         : this.ocorUrlFoto
             
