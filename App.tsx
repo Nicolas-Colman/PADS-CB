@@ -8,6 +8,8 @@ import Cadastro from './Src/views/Cadastro';
 import Menu from './Src/views/Menu';
 import RecuperaSenha from './Src/views/RecuperaSenha'; 
 import Config from './Src/views/Config';
+import NovaOcorrencia from './Src/views/NovaOcorrencia';
+import Ocorrencias from './Src/views/Ocorrencia';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +22,8 @@ export default function App() {
       <Stack.Screen name="RecuperaSenha" component={RecuperaSenha} options={{headerShown: false}}/>
       <Stack.Screen name="Menu"     component={Menu} options={{headerShown: false}}/>
       <Stack.Screen name ="Config" component={Config} options={{headerShown: false}}/>
+      <Stack.Screen name ="NovaOcorrencia" component={NovaOcorrencia} options={{headerShown: false}}/>
+      <Stack.Screen name ="Ocorrencia" component={Ocorrencias} options={{headerShown: false}}/>
     </Stack.Navigator>
   </NavigationContainer>
   );
