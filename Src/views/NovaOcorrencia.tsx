@@ -15,8 +15,8 @@ import * as Location from "expo-location";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
-import { Ocorrencia } from "../model/ocorrencia";
-import { firestore, storage } from "../../firebase";
+import { Ocorrencia} from "../model/ocorrencia";
+import { firestore, storage, auth } from "../../firebase";
 import { uploadBytes } from "firebase/storage";
 import estilo from "../../estilo";
 
@@ -28,7 +28,7 @@ const NovaOcorrencias = () => {
   const [locUser, setLocUser] = useState<string>('');
   const [locMapa, setLocMapa] = useState<{ latitude: number; longitude: number }>({ latitude: 0, longitude: 0 });
   const refOcorrencia = firestore.collection("Ocorrencia/OcorrenciaDoc/Ocorrencia");
-
+  const refUser =firestore.collection("/Perfil/ClienteDoc/Cliente").doc(auth.currentUser?.uid);
   const [region, setRegion] = useState({
     latitude: -30.0346,
     longitude: -51.2177,
@@ -114,14 +114,43 @@ const NovaOcorrencias = () => {
       alert("Envio cancelado!");
     }
   };
+  const Limpar = () => {
+        setFormOcorrencia({})
+    }
 
-  const Enviar = () => {
+  const Enviar = async () => {
+    const ocorrencia = new Ocorrencia(formOcorrencia);
+    const docUser = await refUser.get();
+    const dataUser = docUser.data();
+    ocorrencia.ocorUrlFoto = dataUser?.ocorUrlFoto;
+    ocorrencia.userId = auth.currentUser?.uid;
+
+    if (ocorrencia.ocorId === undefined){
+            const refIdOcor = refOcorrencia.doc();
+            ocorrencia.ocorId = refIdOcor.id;
+
+            refIdOcor.set(ocorrencia.toFirestore())
+            .then(() =>{
+                alert("publicação criada com sucesso");
+                Limpar();
+            
+            })
+      }
+    // else {
+    //         const refIdOcor = refOcorrencia.doc(ocorrencia.ocorId);
+
+    //         refIdOcor.update(ocorrencia.toFirestore())
+    //         .then(() => {
+    //             alert(ocorrencia.ocorDescricao + " atualizado com sucesso!");
+    //             Limpar();
+    //         })
+    //     }
 
 
-    Alert.alert(
-      "Dados da Ocorrência",
-      `Endereço digitado: ${locUser}\n\nLocalização no mapa:\nLatitude: ${locMapa.latitude}\nLongitude: ${locMapa.longitude}`
-    );
+    // Alert.alert(
+    //   "Dados da Ocorrência",
+    //   `Endereço digitado: ${locUser}\n\nLocalização no mapa:\nLatitude: ${locMapa.latitude}\nLongitude: ${locMapa.longitude}`
+    // );
 
   };
 
