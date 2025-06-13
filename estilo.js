@@ -44,6 +44,79 @@ export default StyleSheet.create({
         fontSize: 40,
         color: "grey",
     },
+    //----------------- login -----------------
+     containerLog: {
+        flex: 1,
+        backgroundColor: '#2196F3',
+    },
+    topContainerLog: {
+        height: '35%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 50,
+    },
+    logoTextLog: {
+        color: '#fff',
+        fontSize: 32,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    loginContainerLog: {
+        backgroundColor: '#EFFFF8',
+        borderTopLeftRadius: 80,
+        paddingHorizontal: 30,
+        paddingTop: 40,
+        height: "100%",
+        alignItems: 'stretch',
+    },
+    titleLog: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#1B1B1F',
+        textAlign: 'center',
+        marginBottom: 20,
+    },
+    labelLog: {
+        fontSize: 12,
+        color: '#1B1B1F',
+        marginBottom: 5,
+        marginTop: 10,
+        fontWeight: '500',
+    },
+    inputLog: {
+        backgroundColor: '#C5CCC9',
+        borderRadius: 12,
+        height: 48,
+        paddingHorizontal: 15,
+        fontSize: 14,
+        marginBottom: 10,
+        color: '#000',
+    },
+    buttonLog: {
+        backgroundColor: '#1B1B1F',
+        borderRadius: 10,
+        paddingVertical: 14,
+        marginTop: 10,
+        alignItems: 'center',
+    },
+    buttonTextLog: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    linkLog: {
+        color: '#1B1B1F',
+        textAlign: 'center',
+        fontSize: 14,
+        marginTop: 16,
+        fontWeight: '600',
+    },
+    subLinkLog: {
+        color: '#1B1B1F',
+        textAlign: 'center',
+        fontSize: 12,
+        marginTop: 10,
+    },
 
     // Mapa
     containerMapa: {

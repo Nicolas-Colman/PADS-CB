@@ -4,7 +4,8 @@ export class Ocorrencia {
     public ocorTipo         : string    | undefined;
     public ocorId           : string    | undefined;
     public ocorEndereco     : string    | undefined;
-    public ocorLocalizacao  : string    | undefined;
+    public ocorLatitude     : number    | undefined;
+    public ocorLongitude    : number    | undefined;
     public userId           : string    | undefined;
     public ocorUrlFoto      : string    | undefined;
     
@@ -14,7 +15,8 @@ export class Ocorrencia {
             this.ocorDescricao      = obj.ocorDescricao
             this.ocorId             = obj.ocorId
             this.ocorTipo           = obj.ocorTipo 
-            this.ocorLocalizacao    = obj.ocorLocalizacao
+            this.ocorLatitude       = obj.ocorLatitude
+            this.ocorLongitude      = obj.ocorLongitude
             this.ocorEndereco       = obj.ocorEndereco
             this.userId             = obj.userId
             this.ocorUrlFoto        = obj.ocorUrlFoto
@@ -27,7 +29,8 @@ export class Ocorrencia {
             "ocorDescricao"     : "${this.ocorDescricao}",
             "ocorId"            : "${this.ocorId}
             "ocorTipo"          : "${this.ocorTipo}
-            "ocorLocalizacao"   : "${this.ocorLocalizacao}",
+            "ocorLatitude"      : "${this.ocorLatitude}",
+            "ocorLongitude"     : "${this.ocorLongitude}",
             "ocorEndereco"      : "${this.ocorEndereco}",
             "userId"            : "${this.userId}"
             "ocorUrlFoto"       : "${this.ocorUrlFoto}"
@@ -41,7 +44,8 @@ export class Ocorrencia {
             ocorDescricao       : this.ocorDescricao,
             ocorId              : this.ocorId,
             ocorTipo            : this.ocorTipo,
-            ocorLocalizacao     : this.ocorLocalizacao, 
+            ocorLatitude        : this.ocorLatitude, 
+            ocorLongitude       : this.ocorLongitude, 
             ocorEndereco        : this.ocorEndereco, 
             userId              : this.userId,
             ocorUrlFoto         : this.ocorUrlFoto

@@ -25,10 +25,12 @@ const NovaOcorrencias = () => {
   const [formOcorrencia, setFormOcorrencia] = useState<Partial<Ocorrencia>>({});
   const [selecionado, setSelecionado] = useState<string>('');
   const [imagePath, setImagePath] = useState('');
-  const [locUser, setLocUser] = useState<string>('');
   const [locMapa, setLocMapa] = useState<{ latitude: number; longitude: number }>({ latitude: 0, longitude: 0 });
   const refOcorrencia = firestore.collection("Ocorrencia/OcorrenciaDoc/Ocorrencia");
   const refUser =firestore.collection("/Perfil/ClienteDoc/Cliente").doc(auth.currentUser?.uid);
+  const [refFoto, setRefFoto] = useState('');
+  const [userRefFoto, setUserRefFoto] = useState('');
+  
   const [region, setRegion] = useState({
     latitude: -30.0346,
     longitude: -51.2177,
@@ -36,6 +38,26 @@ const NovaOcorrencias = () => {
     longitudeDelta: 0.01,
   });
 
+  useEffect(() => {
+    const carregarFotoUsuario = async () => {
+      try {
+        const uid = auth.currentUser?.uid;
+        if (!uid) return;
+
+        const userDoc = await firestore.collection("/Perfil/ClienteDoc/Cliente").doc(uid).get();
+        const userData = userDoc.data();
+
+        if (userData?.userUrlFoto) {
+          setUserRefFoto(userData.userUrlFoto);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar foto do usuário:", error);
+      }
+    };
+
+    carregarFotoUsuario(); 
+  }, []);
+  
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -109,7 +131,10 @@ const NovaOcorrencias = () => {
       const fbResult = await uploadBytes(ref, blob);
 
       const urlDownload = await storage.ref(fbResult.metadata.fullPath).getDownloadURL();
+      setRefFoto (urlDownload);
       setFormOcorrencia({ ...formOcorrencia, ocorUrlFoto: urlDownload });
+      console.log("URL da imagem:", urlDownload);
+
     } else {
       alert("Envio cancelado!");
     }
@@ -122,35 +147,29 @@ const NovaOcorrencias = () => {
     const ocorrencia = new Ocorrencia(formOcorrencia);
     const docUser = await refUser.get();
     const dataUser = docUser.data();
-    ocorrencia.ocorUrlFoto = dataUser?.ocorUrlFoto;
     ocorrencia.userId = auth.currentUser?.uid;
+    ocorrencia.ocorDataRegistro = new Date();
 
-    if (ocorrencia.ocorId === undefined){
+    try{
+    if (ocorrencia.ocorId == undefined){
             const refIdOcor = refOcorrencia.doc();
             ocorrencia.ocorId = refIdOcor.id;
+            ocorrencia.ocorUrlFoto = refFoto;
+            ocorrencia.ocorLatitude = locMapa.latitude
+            ocorrencia.ocorLongitude = locMapa.longitude
 
-            refIdOcor.set(ocorrencia.toFirestore())
+            await refIdOcor.set(ocorrencia.toFirestore())
             .then(() =>{
                 alert("publicação criada com sucesso");
                 Limpar();
             
             })
       }
-    // else {
-    //         const refIdOcor = refOcorrencia.doc(ocorrencia.ocorId);
-
-    //         refIdOcor.update(ocorrencia.toFirestore())
-    //         .then(() => {
-    //             alert(ocorrencia.ocorDescricao + " atualizado com sucesso!");
-    //             Limpar();
-    //         })
-    //     }
-
-
-    // Alert.alert(
-    //   "Dados da Ocorrência",
-    //   `Endereço digitado: ${locUser}\n\nLocalização no mapa:\nLatitude: ${locMapa.latitude}\nLongitude: ${locMapa.longitude}`
-    // );
+      
+    }catch (error) {
+  console.error("Erro ao salvar ocorrência:", error);
+  Alert.alert("Erro", "Não foi possível salvar a ocorrência.");
+}
 
   };
 
@@ -163,7 +182,7 @@ const NovaOcorrencias = () => {
           <TouchableOpacity onPress={voltar}>
             <Ionicons name="arrow-back" size={28} color="#fff" />
           </TouchableOpacity>
-          <Image source={require("../assets/camera.png")} style={estilo.perfil} />
+          <Image source={{ uri: userRefFoto }} style={estilo.perfil} />
           <Text style={estilo.nomeUsuario}>Júlia Martins</Text>
         </View>
 
@@ -228,11 +247,6 @@ const NovaOcorrencias = () => {
                 latitude: reg.latitude,
                 longitude: reg.longitude,
               });
-              setFormOcorrencia((prev) => ({
-                ...prev,
-                ocorLatitude: reg.latitude,
-                ocorLongitude: reg.longitude,
-              }));
             }}
           />
           {/* Pin fixo no centro */}
@@ -241,11 +255,9 @@ const NovaOcorrencias = () => {
               position: "absolute",
               top: "50%",
               left: "50%",
-              marginLeft: -24,
-              marginTop: -48,
             }}
           >
-            <Image source={require("../assets/pin.png")} style={{ width: 20, height: 20 }} />
+            <Ionicons name="pin-outline" size={28} color="black" />
           </View>
         </View>
 
