@@ -1,10 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
     Image,
-    StyleSheet,
     Dimensions,
     ScrollView,
     TouchableOpacity,
@@ -12,12 +11,30 @@ import {
 } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import estilo from "../../estilo";
+import { buscarDadosUsuario } from "../Controlls/user";
 
 const { width } = Dimensions.get("window");
 
 const Home = () => {
     const navigation = useNavigation();
     const [menuVisible, setMenuVisible] = React.useState(false);
+    const [userRefFoto, setUserRefFoto] = useState('');
+    const [userOn, setUserOn] = useState('');
+
+
+    useEffect(() => {
+        const carregarFoto = async () => {
+            try {
+                const dados = await buscarDadosUsuario();
+                setUserRefFoto(dados?.userUrlFoto || null);
+                setUserOn(dados?.userNome || null);
+            } catch (err) {
+                console.error('Erro ao carregar dados do usuário:', err);
+            }
+        };
+
+        carregarFoto();
+    }, []);
 
     const handleLogout = () => {
         setMenuVisible(false);
@@ -58,12 +75,14 @@ const Home = () => {
                         </View>
                     </TouchableOpacity>
                 </Modal>
-                
+
 
                 {/* TOPO - TÍTULO + PERFIL */}
                 <View style={estilo.header}>
-                    <Image source={require("../assets/camera.png")} style={estilo.perfil} />
-                    <Text style={estilo.nomeUsuario}>Júlia Martins</Text>
+                      <Image source={userRefFoto
+                        ? { uri: userRefFoto }
+                        : require('../assets/user.png')} style={estilo.perfil} />
+                    <Text style={estilo.nomeUsuario}>{userOn}</Text>
                 </View>
 
                 {/* IMAGEM CENTRAL */}

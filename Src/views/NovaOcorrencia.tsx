@@ -19,6 +19,7 @@ import { Ocorrencia} from "../model/ocorrencia";
 import { firestore, storage, auth } from "../../firebase";
 import { uploadBytes } from "firebase/storage";
 import estilo from "../../estilo";
+import { buscarDadosUsuario } from '../Controlls/user';
 
 const NovaOcorrencias = () => {
   const navigation = useNavigation();
@@ -30,33 +31,32 @@ const NovaOcorrencias = () => {
   const refUser =firestore.collection("/Perfil/ClienteDoc/Cliente").doc(auth.currentUser?.uid);
   const [refFoto, setRefFoto] = useState('');
   const [userRefFoto, setUserRefFoto] = useState('');
+  const [userOn, setUserOn] = useState('');
   
-  const [region, setRegion] = useState({
+ 
+
+  useEffect(() => {
+    const carregarFoto = async () => {
+      try {
+        const dados = await buscarDadosUsuario();
+        setUserRefFoto(dados?.userUrlFoto || null);
+        setUserOn(dados?.userNome || null);
+
+      } catch (err) {
+        console.error('Erro ao carregar dados do usuário:', err);
+      }
+    };
+
+
+    carregarFoto();
+  }, []);
+
+   const [region, setRegion] = useState({
     latitude: -30.0346,
     longitude: -51.2177,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
-
-  useEffect(() => {
-    const carregarFotoUsuario = async () => {
-      try {
-        const uid = auth.currentUser?.uid;
-        if (!uid) return;
-
-        const userDoc = await firestore.collection("/Perfil/ClienteDoc/Cliente").doc(uid).get();
-        const userData = userDoc.data();
-
-        if (userData?.userUrlFoto) {
-          setUserRefFoto(userData.userUrlFoto);
-        }
-      } catch (error) {
-        console.error("Erro ao buscar foto do usuário:", error);
-      }
-    };
-
-    carregarFotoUsuario(); 
-  }, []);
   
   useEffect(() => {
     (async () => {
@@ -182,8 +182,10 @@ const NovaOcorrencias = () => {
           <TouchableOpacity onPress={voltar}>
             <Ionicons name="arrow-back" size={28} color="#fff" />
           </TouchableOpacity>
-          <Image source={{ uri: userRefFoto }} style={estilo.perfil} />
-          <Text style={estilo.nomeUsuario}>Júlia Martins</Text>
+          <Image source={userRefFoto
+            ? { uri: userRefFoto }
+            : require('../assets/user.png')} style={estilo.perfil} />
+          <Text style={estilo.nomeUsuario}>{userOn}</Text>
         </View>
 
         {/* Título */}

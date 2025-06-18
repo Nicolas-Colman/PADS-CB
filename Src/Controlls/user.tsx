@@ -1,15 +1,12 @@
-import React from "react";
-import { Text,} from "react-native";
-import { firestore, storage } from "../../firebase";
+import { firestore, auth } from '../../firebase';
 
-const user =()=>{
+export const buscarDadosUsuario = async () => {
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error('Usuário não autenticado');
 
-    return(
+  const userDoc = await firestore.collection("/Perfil/ClienteDoc/Cliente").doc(uid).get();
 
-        <Text>
+  if (!userDoc.exists) throw new Error('Usuário não encontrado');
 
-        </Text>
-    );
-
-}
-export default user;
+  return userDoc.data(); // retorna o objeto com nome, foto, etc.
+};

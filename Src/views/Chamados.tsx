@@ -1,5 +1,5 @@
 // ...importações mantidas
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from "@react-navigation/native";
 import {
   KeyboardAvoidingView,
@@ -11,9 +11,27 @@ import {
 } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import estilo from '../../estilo';
+import { buscarDadosUsuario } from '../Controlls/user';
 
 const Chamados = () => {
   const navigation = useNavigation();
+  const [userRefFoto, setUserRefFoto] = useState('');
+  const [userOn, setUserOn] = useState('');
+
+
+  useEffect(() => {
+    const carregarFoto = async () => {
+      try {
+        const dados = await buscarDadosUsuario();
+        setUserRefFoto(dados?.userUrlFoto || null);
+        setUserOn(dados?.userNome || null);
+      } catch (err) {
+        console.error('Erro ao carregar dados do usuário:', err);
+      }
+    };
+
+    carregarFoto();
+  }, []);
 
   const NovaOcorrencia = () => {
     navigation.replace('NovaOcorrencia');
@@ -25,18 +43,15 @@ const Chamados = () => {
 
         {/* TOPO */}
         <View style={estilo.header}>
-          <TouchableOpacity onPress={() => navigation.replace("Menu")}>
+          <TouchableOpacity onPress={() => navigation.replace('Menu')}>
             <Ionicons name="arrow-back" size={28} color="#fff" />
           </TouchableOpacity>
 
-          <Image
-            source={require('../assets/julia.png')}
-            style={estilo.perfil}
-          />
+          <Image source={userRefFoto
+            ? { uri: userRefFoto }
+            : require('../assets/user.png')} style={estilo.perfil} />
+          <Text style={estilo.nomeUsuario}>{userOn}</Text>
 
-          <Text style={estilo.nomeUsuario}>
-            Júlia Martins
-          </Text>
         </View>
 
         {/* TÍTULO COM ÍCONE AO LADO */}

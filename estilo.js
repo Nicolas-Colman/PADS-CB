@@ -134,7 +134,7 @@ export default StyleSheet.create({
     // Nova Ocorrencia
     header: {
         backgroundColor: "#2196F3",
-        paddingTop: 80,
+        paddingTop: 40,
         paddingBottom: 20,
         paddingHorizontal: 25,
         flexDirection: "row",

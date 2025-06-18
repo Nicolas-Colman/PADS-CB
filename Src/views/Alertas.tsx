@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   View,
@@ -10,23 +10,43 @@ import {
   StyleSheet,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { buscarDadosUsuario } from "../Controlls/user";
+import estilo from "../../estilo";
+
 
 const Alertas = () => {
   const navigation = useNavigation();
 
+  const [userRefFoto, setUserRefFoto] = useState('');
+  const [userOn, setUserOn] = useState('');
+
+
+  useEffect(() => {
+    const carregarFoto = async () => {
+      try {
+        const dados = await buscarDadosUsuario();
+        setUserRefFoto(dados?.userUrlFoto || null);
+        setUserOn(dados?.userNome || null);
+      } catch (err) {
+        console.error('Erro ao carregar dados do usuário:', err);
+      }
+    };
+
+    carregarFoto();
+  }, []);
+
   return (
     <KeyboardAvoidingView style={styles.container}>
       {/* Topo com seta, nome e imagem */}
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => navigation.replace("Menu")}>
+      <View style={estilo.header}>
+        <TouchableOpacity onPress={() => navigation.replace('Menu')}>
           <Ionicons name="arrow-back" size={28} color="#fff" />
         </TouchableOpacity>
 
-        <Text style={styles.userName}>Júlia Martins</Text>
-        <Image
-          source={{ uri: 'https://randomuser.me/api/portraits/women/79.jpg' }}
-          style={styles.profileImage}
-        />
+        <Image source={userRefFoto
+          ? { uri: userRefFoto }
+          : require('../assets/user.png')} style={estilo.perfil} />
+        <Text style={estilo.nomeUsuario}>{userOn}</Text>
       </View>
 
       {/* Conteúdo */}

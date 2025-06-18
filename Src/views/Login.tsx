@@ -7,9 +7,7 @@ import {
     TextInput,
     Text,
     TouchableOpacity,
-    StyleSheet,
     Platform,
-    ScrollView,
 } from "react-native";
 import { auth, firestore } from '../../firebase';
 import estilo from "../../estilo";
@@ -78,7 +76,6 @@ const Login = () => {
     return (
         <KeyboardAvoidingView
             style={estilo.containerLog}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
             
 
