@@ -20,6 +20,7 @@ import { firestore, storage, auth } from "../../firebase";
 import { uploadBytes } from "firebase/storage";
 import estilo from "../../estilo";
 import { buscarDadosUsuario } from '../Controlls/user';
+import { serverTimestamp } from "firebase/firestore";
 
 const NovaOcorrencias = () => {
   const navigation = useNavigation();
@@ -150,6 +151,9 @@ const NovaOcorrencias = () => {
     ocorrencia.userId = auth.currentUser?.uid;
     ocorrencia.ocorDataRegistro = new Date();
 
+    ocorrencia.ocorLike = 0;
+    ocorrencia.ocorDeslike = 0;
+
     try{
     if (ocorrencia.ocorId == undefined){
             const refIdOcor = refOcorrencia.doc();
@@ -180,7 +184,7 @@ const NovaOcorrencias = () => {
         {/* Header */}
         <View style={estilo.header}>
           <TouchableOpacity onPress={voltar}>
-            <Ionicons name="arrow-back" size={28} color="#fff" />
+            <Ionicons name="arrow-back" size={58} color="#fff" />
           </TouchableOpacity>
           <Image source={userRefFoto
             ? { uri: userRefFoto }

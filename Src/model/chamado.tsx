@@ -1,4 +1,4 @@
-export class Chamados {
+export class Chamado {
     public adminId          : string    | undefined;
     public chamDataCriacao  : Date      | undefined;
     public chamId           : string    | undefined;
@@ -6,7 +6,7 @@ export class Chamados {
     public ocorId           : string    | undefined;
     public prestId          : string    | undefined;
 
-    constructor(obj?: Partial<Chamados>){
+    constructor(obj?: Partial<Chamado>){
         if (obj){
             this.adminId          = obj.adminId
             this.chamDataCriacao  = obj.chamDataCriacao
@@ -30,7 +30,7 @@ export class Chamados {
     }
 
     toFirestore(){
-        const chamados={
+        const chamado={
             adminId          : this.adminId,
             chamDataCriacao  : this.chamDataCriacao,
             chamId           : this.chamId,
@@ -38,7 +38,7 @@ export class Chamados {
             ocorId           : this.ocorId,
             prestId          : this.prestId
         }
-        return chamados
+        return chamado
     }
 
 

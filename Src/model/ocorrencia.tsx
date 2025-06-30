@@ -1,5 +1,5 @@
 export class Ocorrencia {
-    public ocorDataRegistro : Date      | undefined;
+    public ocorDataRegistro : Date | undefined;
     public ocorDescricao    : string    | undefined;
     public ocorTipo         : string    | undefined;
     public ocorId           : string    | undefined;
@@ -8,6 +8,8 @@ export class Ocorrencia {
     public ocorLongitude    : number    | undefined;
     public userId           : string    | undefined;
     public ocorUrlFoto      : string    | undefined;
+    public ocorLike         : number    | undefined;
+    public ocorDeslike      : number    | undefined;
     
     constructor(obj?: Partial<Ocorrencia>){
         if (obj){
@@ -20,6 +22,8 @@ export class Ocorrencia {
             this.ocorEndereco       = obj.ocorEndereco
             this.userId             = obj.userId
             this.ocorUrlFoto        = obj.ocorUrlFoto
+            this.ocorLike           = obj.ocorLike
+            this.ocorDeslike        = obj.ocorDeslike
         }
     }
 
@@ -34,6 +38,8 @@ export class Ocorrencia {
             "ocorEndereco"      : "${this.ocorEndereco}",
             "userId"            : "${this.userId}"
             "ocorUrlFoto"       : "${this.ocorUrlFoto}"
+            "ocorLike"          : "${this.ocorLike}"
+            "ocorDeslike"       : "${this.ocorDeslike}"
         }`
         return objeto
     }
@@ -48,7 +54,9 @@ export class Ocorrencia {
             ocorLongitude       : this.ocorLongitude, 
             ocorEndereco        : this.ocorEndereco, 
             userId              : this.userId,
-            ocorUrlFoto         : this.ocorUrlFoto
+            ocorUrlFoto         : this.ocorUrlFoto,
+            ocorLike            : this.ocorLike,
+            ocorDeslike         : this.ocorDeslike,
             
         }
         return ocorrencia
