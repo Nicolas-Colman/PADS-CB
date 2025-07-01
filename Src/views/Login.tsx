@@ -7,10 +7,10 @@ import {
     TextInput,
     Text,
     TouchableOpacity,
-    StyleSheet,
-    Platform
+    Platform,
 } from "react-native";
 import { auth, firestore } from '../../firebase';
+import estilo from "../../estilo";
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -75,122 +75,49 @@ const Login = () => {
 
     return (
         <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={estilo.containerLog}
         >
-            <View style={styles.topContainer}>
-                <Text style={styles.logoText}>Comunica{'\n'}Bagé</Text>
-            </View>
+            
 
-            <View style={styles.loginContainer}>
-                <Text style={styles.title}>Login</Text>
+                <View style={estilo.topContainerLog}>
+                    <Text style={estilo.logoTextLog}>Comunica{'\n'}Bagé</Text>
+                </View>
 
-                <Text style={styles.label}>E-mail</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="exemplo@gmail.com"
-                    placeholderTextColor=""
-                    onChangeText={setEmail}
-                />
+                <View style={estilo.loginContainerLog}>
+                    <Text style={estilo.titleLog}>Login</Text>
 
-                <Text style={styles.label}>SENHA</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="********"
-                    placeholderTextColor="#666"
-                    onChangeText={setSenha}
-                    secureTextEntry
-                />
+                    <Text style={estilo.labelLog}>E-mail</Text>
+                    <TextInput
+                        style={estilo.inputLog}
+                        placeholder="exemplo@gmail.com"
+                        placeholderTextColor=""
+                        onChangeText={setEmail}
+                    />
 
-                <TouchableOpacity style={styles.button} onPress={Login}>
-                    <Text style={styles.buttonText}>Log in</Text>
-                </TouchableOpacity>
+                    <Text style={estilo.labelLog}>SENHA</Text>
+                    <TextInput
+                        style={estilo.inputLog}
+                        placeholder="********"
+                        placeholderTextColor="#666"
+                        onChangeText={setSenha}
+                        secureTextEntry
+                    />
 
-                <TouchableOpacity onPress={recSenha}>
-                    <Text style={styles.link}>Esqueceu sua senha?</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={estilo.buttonLog} onPress={Login}>
+                        <Text style={estilo.buttonTextLog}>Log in</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity onPress={Registrar}>
-                    <Text style={styles.subLink}>Criar conta</Text>
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity onPress={recSenha}>
+                        <Text style={estilo.linkLog}>Esqueceu sua senha?</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={Registrar}>
+                        <Text style={estilo.subLinkLog}>Criar conta</Text>
+                    </TouchableOpacity>
+                </View>
         </KeyboardAvoidingView>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#2196F3',
-    },
-    topContainer: {
-        height: '35%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop: 50,
-    },
-    logoText: {
-        color: '#fff',
-        fontSize: 32,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    loginContainer: {
-        flex: 1,
-        backgroundColor: '#EFFFF8',
-        borderTopLeftRadius: 80,
-        paddingHorizontal: 30,
-        paddingTop: 40,
-        alignItems: 'stretch',
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: '#1B1B1F',
-        textAlign: 'center',
-        marginBottom: 20,
-    },
-    label: {
-        fontSize: 12,
-        color: '#1B1B1F',
-        marginBottom: 5,
-        marginTop: 10,
-        fontWeight: '500',
-    },
-    input: {
-        backgroundColor: '#C5CCC9',
-        borderRadius: 12,
-        height: 48,
-        paddingHorizontal: 15,
-        fontSize: 14,
-        marginBottom: 10,
-        color: '#000',
-    },
-    button: {
-        backgroundColor: '#1B1B1F',
-        borderRadius: 10,
-        paddingVertical: 14,
-        marginTop: 10,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    link: {
-        color: '#1B1B1F',
-        textAlign: 'center',
-        fontSize: 14,
-        marginTop: 16,
-        fontWeight: '600',
-    },
-    subLink: {
-        color: '#1B1B1F',
-        textAlign: 'center',
-        fontSize: 12,
-        marginTop: 10,
-    },
-});
 
 export default Login;

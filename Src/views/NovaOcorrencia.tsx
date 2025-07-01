@@ -19,23 +19,46 @@ import { Ocorrencia} from "../model/ocorrencia";
 import { firestore, storage, auth } from "../../firebase";
 import { uploadBytes } from "firebase/storage";
 import estilo from "../../estilo";
+import { buscarDadosUsuario } from '../Controlls/user';
+import { serverTimestamp } from "firebase/firestore";
 
 const NovaOcorrencias = () => {
   const navigation = useNavigation();
   const [formOcorrencia, setFormOcorrencia] = useState<Partial<Ocorrencia>>({});
   const [selecionado, setSelecionado] = useState<string>('');
   const [imagePath, setImagePath] = useState('');
-  const [locUser, setLocUser] = useState<string>('');
   const [locMapa, setLocMapa] = useState<{ latitude: number; longitude: number }>({ latitude: 0, longitude: 0 });
   const refOcorrencia = firestore.collection("Ocorrencia/OcorrenciaDoc/Ocorrencia");
   const refUser =firestore.collection("/Perfil/ClienteDoc/Cliente").doc(auth.currentUser?.uid);
-  const [region, setRegion] = useState({
+  const [refFoto, setRefFoto] = useState('');
+  const [userRefFoto, setUserRefFoto] = useState('');
+  const [userOn, setUserOn] = useState('');
+  
+ 
+
+  useEffect(() => {
+    const carregarFoto = async () => {
+      try {
+        const dados = await buscarDadosUsuario();
+        setUserRefFoto(dados?.userUrlFoto || null);
+        setUserOn(dados?.userNome || null);
+
+      } catch (err) {
+        console.error('Erro ao carregar dados do usuário:', err);
+      }
+    };
+
+
+    carregarFoto();
+  }, []);
+
+   const [region, setRegion] = useState({
     latitude: -30.0346,
     longitude: -51.2177,
     latitudeDelta: 0.01,
     longitudeDelta: 0.01,
   });
-
+  
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -109,7 +132,10 @@ const NovaOcorrencias = () => {
       const fbResult = await uploadBytes(ref, blob);
 
       const urlDownload = await storage.ref(fbResult.metadata.fullPath).getDownloadURL();
+      setRefFoto (urlDownload);
       setFormOcorrencia({ ...formOcorrencia, ocorUrlFoto: urlDownload });
+      console.log("URL da imagem:", urlDownload);
+
     } else {
       alert("Envio cancelado!");
     }
@@ -122,35 +148,33 @@ const NovaOcorrencias = () => {
     const ocorrencia = new Ocorrencia(formOcorrencia);
     const docUser = await refUser.get();
     const dataUser = docUser.data();
-    ocorrencia.ocorUrlFoto = dataUser?.ocorUrlFoto;
     ocorrencia.userId = auth.currentUser?.uid;
+    ocorrencia.ocorDataRegistro = new Date();
 
-    if (ocorrencia.ocorId === undefined){
+    ocorrencia.ocorLike = 0;
+    ocorrencia.ocorDeslike = 0;
+
+    try{
+    if (ocorrencia.ocorId == undefined){
             const refIdOcor = refOcorrencia.doc();
             ocorrencia.ocorId = refIdOcor.id;
+            ocorrencia.ocorUrlFoto = refFoto;
+            ocorrencia.ocorLatitude = locMapa.latitude
+            ocorrencia.ocorLongitude = locMapa.longitude
 
-            refIdOcor.set(ocorrencia.toFirestore())
+            await refIdOcor.set(ocorrencia.toFirestore())
             .then(() =>{
-                alert("publicação criada com sucesso");
+                Alert.alert("Sucesso","Publicação criada com sucesso");
                 Limpar();
+                navigation.replace("Menu", { screen: "Ocorrencias" });
             
             })
       }
-    // else {
-    //         const refIdOcor = refOcorrencia.doc(ocorrencia.ocorId);
-
-    //         refIdOcor.update(ocorrencia.toFirestore())
-    //         .then(() => {
-    //             alert(ocorrencia.ocorDescricao + " atualizado com sucesso!");
-    //             Limpar();
-    //         })
-    //     }
-
-
-    // Alert.alert(
-    //   "Dados da Ocorrência",
-    //   `Endereço digitado: ${locUser}\n\nLocalização no mapa:\nLatitude: ${locMapa.latitude}\nLongitude: ${locMapa.longitude}`
-    // );
+      
+    }catch (error) {
+  console.error("Erro ao salvar ocorrência:", error);
+  Alert.alert("Erro", "Não foi possível salvar a ocorrência.");
+}
 
   };
 
@@ -161,10 +185,12 @@ const NovaOcorrencias = () => {
         {/* Header */}
         <View style={estilo.header}>
           <TouchableOpacity onPress={voltar}>
-            <Ionicons name="arrow-back" size={28} color="#fff" />
+            <Ionicons name="arrow-back" size={58} color="#fff" />
           </TouchableOpacity>
-          <Image source={require("../assets/camera.png")} style={estilo.perfil} />
-          <Text style={estilo.nomeUsuario}>Júlia Martins</Text>
+          <Image source={userRefFoto
+            ? { uri: userRefFoto }
+            : require('../assets/user.png')} style={estilo.perfil} />
+          <Text style={estilo.nomeUsuario}>{userOn}</Text>
         </View>
 
         {/* Título */}
@@ -228,11 +254,6 @@ const NovaOcorrencias = () => {
                 latitude: reg.latitude,
                 longitude: reg.longitude,
               });
-              setFormOcorrencia((prev) => ({
-                ...prev,
-                ocorLatitude: reg.latitude,
-                ocorLongitude: reg.longitude,
-              }));
             }}
           />
           {/* Pin fixo no centro */}
@@ -241,11 +262,9 @@ const NovaOcorrencias = () => {
               position: "absolute",
               top: "50%",
               left: "50%",
-              marginLeft: -24,
-              marginTop: -48,
             }}
           >
-            <Image source={require("../assets/pin.png")} style={{ width: 20, height: 20 }} />
+            <Ionicons name="pin-outline" size={28} color="black" />
           </View>
         </View>
 

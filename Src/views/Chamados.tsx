@@ -1,127 +1,208 @@
-// ...importações mantidas
-import React from 'react';
 import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
 import {
-  KeyboardAvoidingView,
   View,
   Text,
+  TextInput,
+  Image,
   TouchableOpacity,
-  ScrollView,
-  Image
-} from 'react-native';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import estilo from '../../estilo';
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import estilo from "../../estilo";
+import { buscarDadosUsuario } from "../Controlls/user";
+import { firestore } from "../../firebase";
+import { Chamado } from "../model/chamado";
+
+type ChamadoCompleto = Chamado & {
+  ocorDescricao?: string;
+  ocorNomeUsuario?: string;
+};
 
 const Chamados = () => {
   const navigation = useNavigation();
+  const [userRefFoto, setUserRefFoto] = useState("");
+  const [userOn, setUserOn] = useState("");
+  const [chamados, setChamados] = useState<ChamadoCompleto[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [refreshing, setRefreshing] = useState(false); // NOVO
+  const [busca, setBusca] = useState("");
 
-  const NovaOcorrencia = () => {
-    navigation.replace('NovaOcorrencia');
+  useEffect(() => {
+    carregarDadosUsuario();
+    buscarChamadosComDetalhes();
+  }, []);
+
+  const carregarDadosUsuario = async () => {
+    const dados = await buscarDadosUsuario();
+    setUserRefFoto(dados?.userUrlFoto || "");
+    setUserOn(dados?.userNome || "");
   };
 
+  const buscarChamadosComDetalhes = async () => {
+    try {
+      const refChamados = firestore.collection("/Chamados/ChamadosDoc/Chamados");
+      const snapshotChamados = await refChamados.get();
+      const listaCompleta: ChamadoCompleto[] = [];
+
+      for (const docChamado of snapshotChamados.docs) {
+        const dadosChamado = docChamado.data();
+        const chamado = new Chamado({
+          chamId: docChamado.id,
+          chamStatus: dadosChamado.chamStatus,
+          chamDataCriacao: dadosChamado.chamDataCriacao?.toDate?.() || new Date(0),
+          ocorId: dadosChamado.ocorId ?? "",
+          prestId: dadosChamado.prestId ?? "",
+          adminId: dadosChamado.adminId ?? "",
+        });
+
+        let ocorDescricao = "Sem descrição";
+        let ocorDataRegistro = new Date(0);
+        let ocorNomeUsuario = "Usuário";
+        let ocorUrlFoto = "";
+
+        if (chamado.ocorId) {
+          const docOcorrencia = await firestore
+            .collection("/Ocorrencia/OcorrenciaDoc/Ocorrencia")
+            .doc(chamado.ocorId)
+            .get();
+
+          if (docOcorrencia.exists) {
+            const dadosOcorrencia = docOcorrencia.data();
+            ocorDescricao = dadosOcorrencia?.ocorDescricao || ocorDescricao;
+
+            if (dadosOcorrencia?.ocorDataRegistro?.toDate) {
+              ocorDataRegistro = dadosOcorrencia.ocorDataRegistro.toDate();
+            } else if (dadosOcorrencia?.ocorDataRegistro) {
+              ocorDataRegistro = new Date(dadosOcorrencia.ocorDataRegistro);
+            }
+
+            const userIdPublicador = dadosOcorrencia?.userId;
+            if (userIdPublicador) {
+              const userDoc = await firestore
+                .collection("/Perfil/ClienteDoc/Cliente")
+                .doc(userIdPublicador)
+                .get();
+
+              if (userDoc.exists) {
+                ocorNomeUsuario = userDoc.data()?.userNome || ocorNomeUsuario;
+                ocorUrlFoto = userDoc.data()?.userUrlFoto || "";
+              }
+            }
+          }
+        }
+
+        listaCompleta.push({
+          ...chamado,
+          ocorDescricao,
+          ocorDataRegistro,
+          ocorNomeUsuario,
+          ocorUrlFoto,
+        });
+      }
+
+      listaCompleta.sort((a, b) => {
+        const dataA = a.chamDataCriacao?.getTime() || 0;
+        const dataB = b.chamDataCriacao?.getTime() || 0;
+        return dataB - dataA;
+      });
+
+      setChamados(listaCompleta);
+    } catch (error) {
+      console.error("Erro ao buscar chamados com detalhes:", error);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  // 🔄 Atualização por pull-to-refresh
+  const aoAtualizar = async () => {
+    setRefreshing(true);
+    await buscarChamadosComDetalhes();
+    setRefreshing(false);
+  };
+
+  const chamadosFiltrados = chamados.filter(
+    (chamado) =>
+      (chamado.ocorDescricao?.toLowerCase().includes(busca.toLowerCase()) ||
+        chamado.ocorNomeUsuario?.toLowerCase().includes(busca.toLowerCase()) ||
+        chamado.chamStatus?.toLowerCase().includes(busca.toLowerCase()) ||
+        chamado.prestId?.toLowerCase().includes(busca.toLowerCase())) ?? false
+  );
+
+  function formatarData(data: Date) {
+    const dia = data.getDate().toString().padStart(2, "0");
+    const mes = (data.getMonth() + 1).toString().padStart(2, "0");
+    const ano = data.getFullYear().toString().slice(-2);
+    return `${dia}/${mes}/${ano}`;
+  }
+
+  const renderItem = ({ item }: { item: ChamadoCompleto }) => (
+    <View style={estilo.cardChamado}>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>Usuário:</Text> {item.ocorNomeUsuario}
+      </Text>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>Data:</Text>{" "}
+        {item.chamDataCriacao ? formatarData(item.chamDataCriacao) : "Sem data"}
+      </Text>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>Status:</Text> {item.chamStatus}
+      </Text>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>Descrição:</Text> {item.ocorDescricao}
+      </Text>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>ID Prestador:</Text> {item.prestId}
+      </Text>
+    </View>
+  );
+
   return (
-    <KeyboardAvoidingView style={estilo.container}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-
-        {/* TOPO */}
-        <View style={estilo.header}>
-          <TouchableOpacity onPress={() => navigation.replace("Menu")}>
-            <Ionicons name="arrow-back" size={28} color="#fff" />
-          </TouchableOpacity>
-
-          <Image
-            source={require('../assets/julia.png')}
-            style={estilo.perfil}
-          />
-
-          <Text style={estilo.nomeUsuario}>
-            Júlia Martins
-          </Text>
-        </View>
-
-        {/* TÍTULO COM ÍCONE AO LADO */}
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 25,
-          paddingTop: 30,
-        }}>
-          <FontAwesome5 name="phone-alt" size={24} color="#000" style={{ marginRight: 10 }} />
-          <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#000' }}>
-            Chamados
-          </Text>
-        </View>
-
-        {/* BUSCAR */}
-        <View
-          style={{
-            backgroundColor: '#D9D9D9',
-            borderRadius: 10,
-            padding: 10,
-            margin: 20,
-            flexDirection: 'row',
-            alignItems: 'center'
-          }}
-        >
-          <Ionicons name="search" size={18} color="#333" style={{ marginRight: 8 }} />
-          <Text style={{ fontWeight: 'bold' }}>Buscar Chamados</Text>
-        </View>
-
-        {/* CHAMADO 1 */}
-        <View style={{ marginHorizontal: 20, marginBottom: 15 }}>
-          <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>
-            CATEGORIA: ENERGIA ELÉTRICA
-          </Text>
-          <View style={{
-            backgroundColor: '#D9D9D9',
-            borderRadius: 10,
-            padding: 10
-          }}>
-            <Text>Nome: Júlia Martins</Text>
-            <Text>Data: 23/04/25  Hora: 11:34</Text>
-            <Text>Localização: Av. Itílio Nº322  Centro</Text>
-            <Text>Descrição: Poste com fios soltos.</Text>
-            <Text>Status: Chamado encaminhado.</Text>
-          </View>
-        </View>
-
-        {/* CHAMADO 2 */}
-        <View style={{ marginHorizontal: 20, marginBottom: 40 }}>
-          <Text style={{ fontWeight: 'bold', marginBottom: 5 }}>
-            CATEGORIA: COLETA DE LIXO
-          </Text>
-          <View style={{
-            backgroundColor: '#D9D9D9',
-            borderRadius: 10,
-            padding: 10
-          }}>
-            <Text>Nome: Júlia Martins</Text>
-            <Text>Data: 31/03/25  Hora: 15:46</Text>
-            <Text>Localização: Av. Itílio Nº322  Centro</Text>
-            <Text>Descrição: Coleta não realizada.</Text>
-            <Text>Status: Finalizado</Text>
-          </View>
-        </View>
-
-        {/* BOTÃO NOVA OCORRÊNCIA */}
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#000",
-            alignSelf: "center",
-            paddingHorizontal: 24,
-            paddingVertical: 12,
-            borderRadius: 25,
-            marginTop: 2,
-            marginBottom: 50,
-          }}
-          onPress={NovaOcorrencia}
-        >
-          <Text style={{ color: '#EFFFF8', fontWeight: 'bold' }}>Registrar nova Ocorrência</Text>
+    <View style={{ flex: 1 }}>
+      <View style={estilo.header}>
+        <TouchableOpacity onPress={() => navigation.replace("Menu")}>
+          <Ionicons name="arrow-back" size={28} color="#fff" />
         </TouchableOpacity>
+        <Image
+          source={userRefFoto ? { uri: userRefFoto } : require("../assets/user.png")}
+          style={estilo.perfil}
+        />
+        <Text style={estilo.nomeUsuario}>{userOn}</Text>
+      </View>
 
-      </ScrollView>
-    </KeyboardAvoidingView>
+      <View style={estilo.tituloContainer}>
+        <Ionicons name="list" size={32} color="#000" />
+        <Text style={estilo.titulo}>Chamados</Text>
+      </View>
+
+      <View style={estilo.buscaContainer}>
+        <Ionicons name="search" size={20} color="#555" />
+        <TextInput
+          placeholder="Buscar Chamado"
+          style={estilo.inputBusca}
+          placeholderTextColor="#555"
+          value={busca}
+          onChangeText={setBusca}
+        />
+      </View>
+
+      {carregando ? (
+        <ActivityIndicator size="large" color="#00aa88" style={{ marginTop: 20 }} />
+      ) : (
+        <FlatList
+          data={chamadosFiltrados}
+          keyExtractor={(item) => item.chamId || Math.random().toString()}
+          renderItem={renderItem}
+          contentContainerStyle={estilo.listaContainer}
+          refreshing={refreshing}           // 👈 atualizando
+          onRefresh={aoAtualizar}           // 👈 callback ao puxar
+        />
+      )}
+    </View>
   );
 };
 
 export default Chamados;
+

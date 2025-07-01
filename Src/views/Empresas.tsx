@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
   View,
   Text,
@@ -9,23 +9,43 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+import { buscarDadosUsuario } from "../Controlls/user";
 import { Ionicons } from "@expo/vector-icons";
+import estilo from "../../estilo";
 
 
 const Empresas = () => {
   const navigation = useNavigation();
+  const [userRefFoto, setUserRefFoto] = useState('');
+    const [userOn, setUserOn] = useState('');
+  
+  
+    useEffect(() => {
+      const carregarFoto = async () => {
+        try {
+          const dados = await buscarDadosUsuario();
+          setUserRefFoto(dados?.userUrlFoto || null);
+          setUserOn(dados?.userNome || null);
+        } catch (err) {
+          console.error('Erro ao carregar dados do usuário:', err);
+        }
+      };
+  
+      carregarFoto();
+    }, []);
 
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.replace("Menu")}>
-          <Ionicons name="arrow-back" size={28} color="#fff" />
-        </TouchableOpacity>
-
-
-        <Text style={styles.nome}>Júlia Martins</Text>
-      </View>
+      <View style={estilo.header}>
+              <TouchableOpacity onPress={() => navigation.replace('Menu')}>
+                <Ionicons name="arrow-back" size={28} color="#fff" />
+              </TouchableOpacity>
+      
+              <Image source={userRefFoto
+                ? { uri: userRefFoto }
+                : require('../assets/user.png')} style={estilo.perfil} />
+              <Text style={estilo.nomeUsuario}>{userOn}</Text>
+            </View>
 
 
       <ScrollView contentContainerStyle={styles.conteudo}>

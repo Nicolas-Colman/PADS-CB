@@ -1,12 +1,15 @@
 export class Ocorrencia {
-    public ocorDataRegistro : Date      | undefined;
+    public ocorDataRegistro : Date | undefined;
     public ocorDescricao    : string    | undefined;
     public ocorTipo         : string    | undefined;
     public ocorId           : string    | undefined;
     public ocorEndereco     : string    | undefined;
-    public ocorLocalizacao  : string    | undefined;
+    public ocorLatitude     : number    | undefined;
+    public ocorLongitude    : number    | undefined;
     public userId           : string    | undefined;
     public ocorUrlFoto      : string    | undefined;
+    public ocorLike         : number    | undefined;
+    public ocorDeslike      : number    | undefined;
     
     constructor(obj?: Partial<Ocorrencia>){
         if (obj){
@@ -14,10 +17,13 @@ export class Ocorrencia {
             this.ocorDescricao      = obj.ocorDescricao
             this.ocorId             = obj.ocorId
             this.ocorTipo           = obj.ocorTipo 
-            this.ocorLocalizacao    = obj.ocorLocalizacao
+            this.ocorLatitude       = obj.ocorLatitude
+            this.ocorLongitude      = obj.ocorLongitude
             this.ocorEndereco       = obj.ocorEndereco
             this.userId             = obj.userId
             this.ocorUrlFoto        = obj.ocorUrlFoto
+            this.ocorLike           = obj.ocorLike
+            this.ocorDeslike        = obj.ocorDeslike
         }
     }
 
@@ -27,10 +33,13 @@ export class Ocorrencia {
             "ocorDescricao"     : "${this.ocorDescricao}",
             "ocorId"            : "${this.ocorId}
             "ocorTipo"          : "${this.ocorTipo}
-            "ocorLocalizacao"   : "${this.ocorLocalizacao}",
+            "ocorLatitude"      : "${this.ocorLatitude}",
+            "ocorLongitude"     : "${this.ocorLongitude}",
             "ocorEndereco"      : "${this.ocorEndereco}",
             "userId"            : "${this.userId}"
             "ocorUrlFoto"       : "${this.ocorUrlFoto}"
+            "ocorLike"          : "${this.ocorLike}"
+            "ocorDeslike"       : "${this.ocorDeslike}"
         }`
         return objeto
     }
@@ -41,10 +50,13 @@ export class Ocorrencia {
             ocorDescricao       : this.ocorDescricao,
             ocorId              : this.ocorId,
             ocorTipo            : this.ocorTipo,
-            ocorLocalizacao     : this.ocorLocalizacao, 
+            ocorLatitude        : this.ocorLatitude, 
+            ocorLongitude       : this.ocorLongitude, 
             ocorEndereco        : this.ocorEndereco, 
             userId              : this.userId,
-            ocorUrlFoto         : this.ocorUrlFoto
+            ocorUrlFoto         : this.ocorUrlFoto,
+            ocorLike            : this.ocorLike,
+            ocorDeslike         : this.ocorDeslike,
             
         }
         return ocorrencia

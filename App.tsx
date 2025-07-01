@@ -10,6 +10,8 @@ import RecuperaSenha from './Src/views/RecuperaSenha';
 import Config from './Src/views/Config';
 import NovaOcorrencia from './Src/views/NovaOcorrencia';
 import Ocorrencias from './Src/views/Ocorrencia';
+import NovoAlerta from './Src/views/NovoAlerta';
+import MinhasOcorrencias from './Src/views/MinhasOcorrencias';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +26,8 @@ export default function App() {
       <Stack.Screen name ="Config" component={Config} options={{headerShown: false}}/>
       <Stack.Screen name ="NovaOcorrencia" component={NovaOcorrencia} options={{headerShown: false}}/>
       <Stack.Screen name ="Ocorrencia" component={Ocorrencias} options={{headerShown: false}}/>
+      <Stack.Screen name ="NovoAlerta" component={NovoAlerta} options={{headerShown: false}}/>
+      <Stack.Screen name="MinhasOcorrencias" component={MinhasOcorrencias} options={{headerShown: false}}/>
     </Stack.Navigator>
   </NavigationContainer>
   );
