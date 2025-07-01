@@ -15,81 +15,147 @@ import { buscarDadosUsuario } from "../Controlls/user";
 import { firestore } from "../../firebase";
 import { Chamado } from "../model/chamado";
 
+type ChamadoCompleto = Chamado & {
+  ocorDescricao?: string;
+  ocorNomeUsuario?: string;
+};
+
 const Chamados = () => {
   const navigation = useNavigation();
   const [userRefFoto, setUserRefFoto] = useState("");
   const [userOn, setUserOn] = useState("");
-  const [chamados, setChamados] = useState<Chamado[]>([]);
+  const [chamados, setChamados] = useState<ChamadoCompleto[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [refreshing, setRefreshing] = useState(false); // NOVO
   const [busca, setBusca] = useState("");
 
   useEffect(() => {
-    const carregarDadosUsuario = async () => {
-      const dados = await buscarDadosUsuario();
-      setUserRefFoto(dados?.userUrlFoto || "");
-      setUserOn(dados?.userNome || "");
-    };
+    carregarDadosUsuario();
+    buscarChamadosComDetalhes();
+  }, []);
 
-    const buscarChamados = async () => {
-      const ref = firestore.collection("/Chamados/ChamadosDoc/Chamados");
-      const snapshot = await ref.get();
-      const lista: Chamado[] = [];
+  const carregarDadosUsuario = async () => {
+    const dados = await buscarDadosUsuario();
+    setUserRefFoto(dados?.userUrlFoto || "");
+    setUserOn(dados?.userNome || "");
+  };
 
-      for (const doc of snapshot.docs) {
-        const dados = doc.data();
+  const buscarChamadosComDetalhes = async () => {
+    try {
+      const refChamados = firestore.collection("/Chamados/ChamadosDoc/Chamados");
+      const snapshotChamados = await refChamados.get();
+      const listaCompleta: ChamadoCompleto[] = [];
 
+      for (const docChamado of snapshotChamados.docs) {
+        const dadosChamado = docChamado.data();
         const chamado = new Chamado({
-          chamId: doc.id,
-          chamStatus: dados.chamStatus,
-          chamDataCriacao: dados.chamDataCriacao?.toDate?.() || new Date(),
-          ocorId: dados.ocorId ?? "",
-          prestId: dados.prestId ?? "",
-          adminId: dados.adminId ?? "",
+          chamId: docChamado.id,
+          chamStatus: dadosChamado.chamStatus,
+          chamDataCriacao: dadosChamado.chamDataCriacao?.toDate?.() || new Date(0),
+          ocorId: dadosChamado.ocorId ?? "",
+          prestId: dadosChamado.prestId ?? "",
+          adminId: dadosChamado.adminId ?? "",
         });
 
-        lista.push(chamado);
+        let ocorDescricao = "Sem descrição";
+        let ocorDataRegistro = new Date(0);
+        let ocorNomeUsuario = "Usuário";
+        let ocorUrlFoto = "";
+
+        if (chamado.ocorId) {
+          const docOcorrencia = await firestore
+            .collection("/Ocorrencia/OcorrenciaDoc/Ocorrencia")
+            .doc(chamado.ocorId)
+            .get();
+
+          if (docOcorrencia.exists) {
+            const dadosOcorrencia = docOcorrencia.data();
+            ocorDescricao = dadosOcorrencia?.ocorDescricao || ocorDescricao;
+
+            if (dadosOcorrencia?.ocorDataRegistro?.toDate) {
+              ocorDataRegistro = dadosOcorrencia.ocorDataRegistro.toDate();
+            } else if (dadosOcorrencia?.ocorDataRegistro) {
+              ocorDataRegistro = new Date(dadosOcorrencia.ocorDataRegistro);
+            }
+
+            const userIdPublicador = dadosOcorrencia?.userId;
+            if (userIdPublicador) {
+              const userDoc = await firestore
+                .collection("/Perfil/ClienteDoc/Cliente")
+                .doc(userIdPublicador)
+                .get();
+
+              if (userDoc.exists) {
+                ocorNomeUsuario = userDoc.data()?.userNome || ocorNomeUsuario;
+                ocorUrlFoto = userDoc.data()?.userUrlFoto || "";
+              }
+            }
+          }
+        }
+
+        listaCompleta.push({
+          ...chamado,
+          ocorDescricao,
+          ocorDataRegistro,
+          ocorNomeUsuario,
+          ocorUrlFoto,
+        });
       }
 
-      lista.sort((a, b) => {
+      listaCompleta.sort((a, b) => {
         const dataA = a.chamDataCriacao?.getTime() || 0;
         const dataB = b.chamDataCriacao?.getTime() || 0;
         return dataB - dataA;
       });
 
-      setChamados(lista);
+      setChamados(listaCompleta);
+    } catch (error) {
+      console.error("Erro ao buscar chamados com detalhes:", error);
+    } finally {
       setCarregando(false);
-    };
+    }
+  };
 
-    carregarDadosUsuario();
-    buscarChamados();
-  }, []);
+  // 🔄 Atualização por pull-to-refresh
+  const aoAtualizar = async () => {
+    setRefreshing(true);
+    await buscarChamadosComDetalhes();
+    setRefreshing(false);
+  };
 
-  // Filtra pelos status ou ocorId, por exemplo
-  const chamadosFiltrados = chamados.filter((chamado) =>
-    chamado.chamStatus?.toLowerCase().includes(busca.toLowerCase()) ||
-    chamado.ocorId?.toLowerCase().includes(busca.toLowerCase())
+  const chamadosFiltrados = chamados.filter(
+    (chamado) =>
+      (chamado.ocorDescricao?.toLowerCase().includes(busca.toLowerCase()) ||
+        chamado.ocorNomeUsuario?.toLowerCase().includes(busca.toLowerCase()) ||
+        chamado.chamStatus?.toLowerCase().includes(busca.toLowerCase()) ||
+        chamado.prestId?.toLowerCase().includes(busca.toLowerCase())) ?? false
   );
 
-  const renderItem = ({ item }: { item: Chamado }) => (
-    <View style={{ marginHorizontal: 20, marginBottom: 15 }}>
-      <View
-        style={{
-          backgroundColor: "#D9D9D9",
-          borderRadius: 10,
-          padding: 10,
-        }}
-      >
-        <Text>ID Chamado: {item.chamId}</Text>
-        <Text>
-          Data:{" "}
-          {item.chamDataCriacao
-            ? item.chamDataCriacao.toLocaleString()
-            : "Sem data"}
-        </Text>
-        <Text>Status: {item.chamStatus}</Text>
-        <Text>ID Ocorrência: {item.ocorId}</Text>
-        <Text>ID Prestador: {item.prestId}</Text>
-      </View>
+  function formatarData(data: Date) {
+    const dia = data.getDate().toString().padStart(2, "0");
+    const mes = (data.getMonth() + 1).toString().padStart(2, "0");
+    const ano = data.getFullYear().toString().slice(-2);
+    return `${dia}/${mes}/${ano}`;
+  }
+
+  const renderItem = ({ item }: { item: ChamadoCompleto }) => (
+    <View style={estilo.cardChamado}>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>Usuário:</Text> {item.ocorNomeUsuario}
+      </Text>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>Data:</Text>{" "}
+        {item.chamDataCriacao ? formatarData(item.chamDataCriacao) : "Sem data"}
+      </Text>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>Status:</Text> {item.chamStatus}
+      </Text>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>Descrição:</Text> {item.ocorDescricao}
+      </Text>
+      <Text style={estilo.label}>
+        <Text style={estilo.bold}>ID Prestador:</Text> {item.prestId}
+      </Text>
     </View>
   );
 
@@ -130,6 +196,8 @@ const Chamados = () => {
           keyExtractor={(item) => item.chamId || Math.random().toString()}
           renderItem={renderItem}
           contentContainerStyle={estilo.listaContainer}
+          refreshing={refreshing}           // 👈 atualizando
+          onRefresh={aoAtualizar}           // 👈 callback ao puxar
         />
       )}
     </View>
@@ -137,3 +205,4 @@ const Chamados = () => {
 };
 
 export default Chamados;
+

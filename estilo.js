@@ -10,8 +10,8 @@ export default StyleSheet.create({
         // paddingBottom: 100,
         backgroundColor: "#EFFFF8",
     },
-    logout:{
-    
+    logout: {
+
     },
 
     imagemView: {
@@ -45,7 +45,7 @@ export default StyleSheet.create({
         color: "grey",
     },
     //----------------- login -----------------
-     containerLog: {
+    containerLog: {
         flex: 1,
         backgroundColor: '#2196F3',
     },
@@ -523,4 +523,290 @@ export default StyleSheet.create({
         textAlign: "center",
         marginTop: 16,
     },
+    //--------------ocorrencia--------
+
+
+    ocorrenciaImagem: {
+        width: 100,
+        height: 100,
+        borderRadius: 10,
+        resizeMode: "cover",
+        backgroundColor: "#ccc",
+    },
+
+    header: {
+        backgroundColor: "#2196F3",
+        paddingTop: 80,
+        paddingBottom: 20,
+        paddingHorizontal: 25,
+        flexDirection: "row",
+        alignItems: "center",
+        borderBottomLeftRadius: 40,
+    },
+    perfil: {
+        width: 60,
+        height: 65,
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: "#fff",
+        marginLeft: 15,
+    },
+    nomeUsuario: {
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: 20,
+        marginLeft: 15,
+    },
+    tituloContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 20,
+        marginTop: 20,
+        marginBottom: 10,
+        gap: 10,
+    },
+    titulo: {
+        fontSize: 26,
+        fontWeight: "bold",
+        color: "#000",
+    },
+    buscaContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#fff",
+        marginHorizontal: 20,
+        paddingHorizontal: 10,
+        borderRadius: 15,
+        height: 45,
+        gap: 8,
+        elevation: 2,
+    },
+    inputBusca: {
+        flex: 1,
+        fontSize: 16,
+        color: "#000",
+    },
+    listaContainer: {
+        paddingHorizontal: 20,
+        paddingBottom: 30,
+        paddingTop: 10,
+    },
+    cardOcorrencia: {
+        backgroundColor: "#fff",
+        borderRadius: 15,
+        padding: 15,
+        marginBottom: 15,
+        elevation: 4,
+        shadowColor: "#000",
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+    },
+    label: {
+        fontSize: 14,
+        marginBottom: 5,
+        color: "#333",
+    },
+    bold: {
+        fontWeight: "bold",
+    },
+    reacoes: {
+        marginTop: 10,
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+    },
+    botaoNovaOcorrencia: {
+        backgroundColor: "#000",
+        margin: 20,
+        paddingVertical: 12,
+        borderRadius: 20,
+        alignItems: "center",
+    },
+    textoBotao: {
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: 16,
+    },
+
+    header: {
+        backgroundColor: "#2196F3",
+        paddingTop: 80,
+        paddingBottom: 20,
+        paddingHorizontal: 25,
+        flexDirection: "row",
+        alignItems: "center",
+        borderBottomLeftRadius: 40,
+    },
+    perfil: {
+        width: 60,
+        height: 65,
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: "#fff",
+        marginLeft: 15,
+    },
+    nomeUsuario: {
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: 20,
+        marginLeft: 15,
+    },
+    tituloContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 20,
+        marginTop: 20,
+        marginBottom: 10,
+        gap: 10,
+    },
+    titulo: {
+        fontSize: 26,
+        fontWeight: "bold",
+        color: "#000",
+    },
+    buscaContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#fff",
+        marginHorizontal: 20,
+        paddingHorizontal: 10,
+        borderRadius: 15,
+        height: 45,
+        gap: 8,
+        elevation: 2,
+    },
+    inputBusca: {
+        flex: 1,
+        fontSize: 16,
+        color: "#000",
+    },
+    listaContainer: {
+        paddingHorizontal: 20,
+        paddingBottom: 30,
+        paddingTop: 10,
+    },
+    cardChamado: {
+        backgroundColor: "#fff",
+        borderRadius: 15,
+        padding: 15,
+        marginBottom: 15,
+        elevation: 4,
+        shadowColor: "#000",
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+    },
+    label: {
+        fontSize: 14,
+        marginBottom: 5,
+        color: "#333",
+    },
+    bold: {
+        fontWeight: "bold",
+    },
+
+     modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.85)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  modalImage: {
+    width: "100%",
+    height: "80%",
+    borderRadius: 15,
+    resizeMode: "contain",
+  },
+  modalCloseArea: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  modalBotaoFechar: {
+    position: "absolute",
+    top: 40,
+    right: 20,
+    padding: 10,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    borderRadius: 30,
+  },
+  cardChamado: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+
+  label: {
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 4,
+  },
+
+  bold: {
+    fontWeight: "bold",
+  },
+
+  ocorrenciaImagem: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+
+  botaoExcluir: {
+    backgroundColor: "#FF3B30",
+    paddingVertical: 8,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: "center",
+  },
+
+  textoBotaoExcluir: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+
+  // Modal
+  modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.85)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+
+  modalImage: {
+    width: "100%",
+    height: "80%",
+    borderRadius: 15,
+    resizeMode: "contain",
+  },
+
+  modalCloseArea: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+
+  modalBotaoFechar: {
+    position: "absolute",
+    top: 40,
+    right: 20,
+    padding: 10,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    borderRadius: 30,
+  },
+
 });

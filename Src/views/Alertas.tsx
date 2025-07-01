@@ -8,66 +8,124 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ScrollView,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { buscarDadosUsuario } from "../Controlls/user";
-import estilo from "../../estilo";
-
+import { firestore } from "../../firebase";
 
 const Alertas = () => {
   const navigation = useNavigation();
 
   const [userRefFoto, setUserRefFoto] = useState('');
   const [userOn, setUserOn] = useState('');
-
+  const [alertas, setAlertas] = useState([]);
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
-    const carregarFoto = async () => {
+    const carregarDados = async () => {
       try {
         const dados = await buscarDadosUsuario();
         setUserRefFoto(dados?.userUrlFoto || null);
         setUserOn(dados?.userNome || null);
+        setUserId(dados?.userId || '');
+
+        if (!dados?.userId) return;
+
+        const snapshot = await firestore
+          .collection(`/Perfil/ClienteDoc/Cliente/${dados.userId}/Alertas`)
+          .orderBy("criadoEm", "desc")
+          .get();
+
+        const lista = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        setAlertas(lista);
       } catch (err) {
-        console.error('Erro ao carregar dados do usuário:', err);
+        console.error("Erro ao carregar dados:", err);
       }
     };
 
-    carregarFoto();
+    carregarDados();
   }, []);
+
+  const deletarAlerta = async (alertaId: string) => {
+    try {
+      await firestore
+        .doc(`/Perfil/ClienteDoc/Cliente/${userId}/Alertas/${alertaId}`)
+        .delete();
+
+      setAlertas(prev => prev.filter(item => item.id !== alertaId));
+      Alert.alert("Alerta removido com sucesso!");
+    } catch (err) {
+      console.error("Erro ao deletar alerta:", err);
+      Alert.alert("Erro ao deletar o alerta.");
+    }
+  };
 
   return (
     <KeyboardAvoidingView style={styles.container}>
-      {/* Topo com seta, nome e imagem */}
-      <View style={estilo.header}>
-        <TouchableOpacity onPress={() => navigation.replace('Menu')}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.replace("Menu")}>
           <Ionicons name="arrow-back" size={28} color="#fff" />
         </TouchableOpacity>
 
-        <Image source={userRefFoto
-          ? { uri: userRefFoto }
-          : require('../assets/user.png')} style={estilo.perfil} />
-        <Text style={estilo.nomeUsuario}>{userOn}</Text>
+        <Image
+          source={userRefFoto ? { uri: userRefFoto } : require("../assets/user.png")}
+          style={styles.profileImage}
+        />
+
+        <Text style={styles.nome}>{userOn}</Text>
       </View>
 
-      {/* Conteúdo */}
-      <View style={styles.content}>
-        <Text style={styles.title}>Alertas</Text>
-
-        <Text style={styles.label}>NOME</Text>
-        <TextInput style={styles.input} value="Minha casa" editable={false} />
-
-        <Text style={styles.label}>ENDEREÇO</Text>
-        <View style={styles.inputMultiline}>
-          <Text style={styles.addressText}>Av. Itália{"\n"}Nº322{"\n"}Bairro: Centro</Text>
+      <ScrollView contentContainerStyle={styles.conteudo}>
+        <View style={styles.iconeTitulo}>
+          <Ionicons name="alert-circle" size={36} color="#000" />
+          <Text style={styles.titulo}>Meus Alertas</Text>
         </View>
 
-        <Text style={styles.label}>CEP</Text>
-        <TextInput style={styles.input} value="96450-000" editable={false} />
+        {alertas.length === 0 ? (
+          <Text style={{ color: "#555" }}>Nenhum alerta cadastrado.</Text>
+        ) : (
+          alertas.map((alerta) => (
+            <View key={alerta.id} style={styles.caixaAlerta}>
+              <View style={styles.linhaTitulo}>
+                <Text style={styles.subtitulo}>NOME</Text>
+                <TouchableOpacity onPress={() => deletarAlerta(alerta.id)}>
+                  <Ionicons name="trash" size={24} color="red" />
+                </TouchableOpacity>
+              </View>
+              <TextInput
+                style={styles.caixaInfo}
+                value={alerta.nome}
+                editable={false}
+              />
 
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Home")}>
-          <Text style={styles.buttonText}>Voltar</Text>
+              <Text style={styles.subtitulo}>ENDEREÇO</Text>
+              <View style={styles.caixaInfo}>
+                <Text style={styles.textoInfo}>{alerta.endereco}</Text>
+              </View>
+
+              <Text style={styles.subtitulo}>CEP</Text>
+              <TextInput
+                style={styles.caixaInfo}
+                value={alerta.cep}
+                editable={false}
+              />
+            </View>
+          ))
+        )}
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.replace("NovoAlerta")}
+        >
+          <Text style={styles.buttonText}>Adicionar Endereço</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -77,64 +135,78 @@ export default Alertas;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#e6ffff",
+    backgroundColor: "#DDFDF5",
   },
-  topBar: {
-    backgroundColor: "#3399ff",
-    paddingTop: 50,
+  header: {
+    backgroundColor: "#2196F3",
+    paddingTop: 80,
     paddingBottom: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     borderBottomLeftRadius: 40,
   },
-  userName: {
+  profileImage: {
+    width: 60,
+    height: 65,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: "#fff",
+    marginLeft: 15,
+  },
+  nome: {
     color: "#fff",
     fontWeight: "bold",
+    fontSize: 20,
+    marginLeft: 15,
+  },
+  conteudo: {
+    padding: 25,
+  },
+  iconeTitulo: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    gap: 10,
+  },
+  titulo: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#000",
+  },
+  subtitulo: {
+    fontWeight: "bold",
     fontSize: 16,
-    flex: 1,
-    textAlign: "center",
-    marginLeft: -28, // para centralizar o texto mesmo com o ícone de seta
-  },
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  content: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 30,
-    color: "#222",
-  },
-  label: {
-    fontWeight: "bold",
-    fontSize: 14,
+    marginTop: 20,
     marginBottom: 5,
-    marginTop: 15,
+    color: "#000",
   },
-  input: {
-    backgroundColor: "#d9e1e8",
-    borderRadius: 10,
-    padding: 10,
+  caixaAlerta: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 15,
+    marginBottom: 20,
+    elevation: 3,
+  },
+  linhaTitulo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  caixaInfo: {
+    backgroundColor: "#D9D9D9",
+    borderRadius: 15,
+    padding: 12,
     fontSize: 16,
+    marginBottom: 10,
   },
-  inputMultiline: {
-    backgroundColor: "#d9e1e8",
-    borderRadius: 10,
-    padding: 10,
-  },
-  addressText: {
-    fontSize: 16,
-    color: "#333",
+  textoInfo: {
+    fontSize: 14,
+    color: "#000",
   },
   button: {
     backgroundColor: "#000",
-    marginTop: 40,
+    marginTop: 20,
     paddingVertical: 12,
     borderRadius: 20,
     alignItems: "center",

@@ -164,8 +164,9 @@ const NovaOcorrencias = () => {
 
             await refIdOcor.set(ocorrencia.toFirestore())
             .then(() =>{
-                alert("publicação criada com sucesso");
+                Alert.alert("Sucesso","Publicação criada com sucesso");
                 Limpar();
+                navigation.replace("Menu", { screen: "Ocorrencias" });
             
             })
       }
