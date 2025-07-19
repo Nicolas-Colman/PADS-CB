@@ -36,9 +36,13 @@ const Home = () => {
         carregarFoto();
     }, []);
 
-    const handleLogout = () => {
+    const Logout = () => {
         setMenuVisible(false);
         navigation.navigate("Login")
+    };
+    const Config = () => {
+        setMenuVisible(false);
+        navigation.navigate("Configuracoes")
     };
 
     return (
@@ -68,9 +72,15 @@ const Home = () => {
                         <View style={estilo.menuContainer}>
                             <TouchableOpacity
                                 style={estilo.menuItem}
-                                onPress={handleLogout}
+                                onPress={Logout}
                             >
                                 <Text style={estilo.menuText}>Sair</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={estilo.menuItem}
+                                onPress={Config}
+                            >
+                                <Text style={estilo.menuText}>Configurações</Text>
                             </TouchableOpacity>
                         </View>
                     </TouchableOpacity>

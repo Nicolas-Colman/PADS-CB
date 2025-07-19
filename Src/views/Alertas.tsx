@@ -14,6 +14,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { buscarDadosUsuario } from "../Controlls/user";
 import { firestore } from "../../firebase";
+import estilo from "../../estilo";
 
 const Alertas = () => {
   const navigation = useNavigation();
@@ -67,51 +68,51 @@ const Alertas = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.header}>
+    <KeyboardAvoidingView style={estilo.container}>
+      <View style={estilo.header}>
         <TouchableOpacity onPress={() => navigation.replace("Menu")}>
           <Ionicons name="arrow-back" size={28} color="#fff" />
         </TouchableOpacity>
 
         <Image
           source={userRefFoto ? { uri: userRefFoto } : require("../assets/user.png")}
-          style={styles.profileImage}
+          style={estilo.profileImage}
         />
 
-        <Text style={styles.nome}>{userOn}</Text>
+        <Text style={estilo.nome}>{userOn}</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.conteudo}>
-        <View style={styles.iconeTitulo}>
+      <ScrollView contentContainerStyle={estilo.conteudo}>
+        <View style={estilo.iconeTitulo}>
           <Ionicons name="alert-circle" size={36} color="#000" />
-          <Text style={styles.titulo}>Meus Alertas</Text>
+          <Text style={estilo.titulo}>Meus Alertas</Text>
         </View>
 
         {alertas.length === 0 ? (
           <Text style={{ color: "#555" }}>Nenhum alerta cadastrado.</Text>
         ) : (
           alertas.map((alerta) => (
-            <View key={alerta.id} style={styles.caixaAlerta}>
-              <View style={styles.linhaTitulo}>
-                <Text style={styles.subtitulo}>NOME</Text>
+            <View key={alerta.id} style={estilo.caixaAlerta}>
+              <View style={estilo.linhaTitulo}>
+                <Text style={estilo.subtitulo}>NOME</Text>
                 <TouchableOpacity onPress={() => deletarAlerta(alerta.id)}>
                   <Ionicons name="trash" size={24} color="red" />
                 </TouchableOpacity>
               </View>
               <TextInput
-                style={styles.caixaInfo}
+                style={estilo.caixaInfo}
                 value={alerta.nome}
                 editable={false}
               />
 
-              <Text style={styles.subtitulo}>ENDEREÇO</Text>
-              <View style={styles.caixaInfo}>
-                <Text style={styles.textoInfo}>{alerta.endereco}</Text>
+              <Text style={estilo.subtitulo}>ENDEREÇO</Text>
+              <View style={estilo.caixaInfo}>
+                <Text style={estilo.textoInfo}>{alerta.endereco}</Text>
               </View>
 
-              <Text style={styles.subtitulo}>CEP</Text>
+              <Text style={estilo.subtitulo}>CEP</Text>
               <TextInput
-                style={styles.caixaInfo}
+                style={estilo.caixaInfo}
                 value={alerta.cep}
                 editable={false}
               />
@@ -120,10 +121,10 @@ const Alertas = () => {
         )}
 
         <TouchableOpacity
-          style={styles.button}
+          style={estilo.button}
           onPress={() => navigation.replace("NovoAlerta")}
         >
-          <Text style={styles.buttonText}>Adicionar Endereço</Text>
+          <Text style={estilo.buttonText}>Adicionar Endereço</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -132,88 +133,4 @@ const Alertas = () => {
 
 export default Alertas;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#DDFDF5",
-  },
-  header: {
-    backgroundColor: "#2196F3",
-    paddingTop: 80,
-    paddingBottom: 20,
-    paddingHorizontal: 25,
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomLeftRadius: 40,
-  },
-  profileImage: {
-    width: 60,
-    height: 65,
-    borderRadius: 30,
-    borderWidth: 2,
-    borderColor: "#fff",
-    marginLeft: 15,
-  },
-  nome: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 20,
-    marginLeft: 15,
-  },
-  conteudo: {
-    padding: 25,
-  },
-  iconeTitulo: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-    gap: 10,
-  },
-  titulo: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#000",
-  },
-  subtitulo: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginTop: 20,
-    marginBottom: 5,
-    color: "#000",
-  },
-  caixaAlerta: {
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    padding: 15,
-    marginBottom: 20,
-    elevation: 3,
-  },
-  linhaTitulo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  caixaInfo: {
-    backgroundColor: "#D9D9D9",
-    borderRadius: 15,
-    padding: 12,
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  textoInfo: {
-    fontSize: 14,
-    color: "#000",
-  },
-  button: {
-    backgroundColor: "#000",
-    marginTop: 20,
-    paddingVertical: 12,
-    borderRadius: 20,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});
+

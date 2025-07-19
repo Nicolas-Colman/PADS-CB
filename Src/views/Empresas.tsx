@@ -123,7 +123,7 @@ export default Empresas;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#DDFDF5",
+    backgroundColor: "#EFFFF8",
   },
   header: {
     backgroundColor: "#2196F3",

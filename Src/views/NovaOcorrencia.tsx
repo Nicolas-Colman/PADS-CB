@@ -172,7 +172,7 @@ const NovaOcorrencias = () => {
       }
       
     }catch (error) {
-  console.error("Erro ao salvar ocorrência:", error);
+  console.error("Erro:", error);
   Alert.alert("Erro", "Não foi possível salvar a ocorrência.");
 }
 

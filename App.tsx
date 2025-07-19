@@ -12,6 +12,7 @@ import NovaOcorrencia from './Src/views/NovaOcorrencia';
 import Ocorrencias from './Src/views/Ocorrencia';
 import NovoAlerta from './Src/views/NovoAlerta';
 import MinhasOcorrencias from './Src/views/MinhasOcorrencias';
+import Configuracoes from './Src/views/Configuracoes';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ export default function App() {
       <Stack.Screen name ="Ocorrencia" component={Ocorrencias} options={{headerShown: false}}/>
       <Stack.Screen name ="NovoAlerta" component={NovoAlerta} options={{headerShown: false}}/>
       <Stack.Screen name="MinhasOcorrencias" component={MinhasOcorrencias} options={{headerShown: false}}/>
+      <Stack.Screen name="Configuracoes" component={Configuracoes} options={{headerShown: false}}/>
     </Stack.Navigator>
   </NavigationContainer>
   );

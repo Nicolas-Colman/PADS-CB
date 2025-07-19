@@ -7,8 +7,8 @@ export default StyleSheet.create({
         alignItems: "center",
     },
     container: {
-        // paddingBottom: 100,
         backgroundColor: "#EFFFF8",
+        flex: 1
     },
     logout: {
 
@@ -161,21 +161,87 @@ export default StyleSheet.create({
         color: "#000",
         marginLeft: 10,
     },
-    // label: {
-    //     marginTop: 20,
-    //     marginBottom: 8,
-    //     fontWeight: "bold",
-    //     color: "#333",
-    //     marginHorizontal: 25,
-    // },
-    // input: {
-    //     backgroundColor: "#D9D9D9",
-    //     borderRadius: 30,
-    //     padding: 12,
-    //     fontSize: 14,
-    //     color: "#000",
-    //     marginHorizontal: 25,
-    // },
+
+    //----------- alerta-----
+    header: {
+        backgroundColor: "#2196F3",
+        paddingTop: 80,
+        paddingBottom: 20,
+        paddingHorizontal: 25,
+        flexDirection: "row",
+        alignItems: "center",
+        borderBottomLeftRadius: 40,
+    },
+    profileImage: {
+        width: 60,
+        height: 65,
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: "#fff",
+        marginLeft: 15,
+    },
+    nome: {
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: 20,
+        marginLeft: 15,
+    },
+    conteudo: {
+        padding: 25,
+    },
+    iconeTitulo: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 20,
+        gap: 10,
+    },
+    titulo: {
+        fontSize: 30,
+        fontWeight: "bold",
+        color: "#000",
+    },
+    subtitulo: {
+        fontWeight: "bold",
+        fontSize: 16,
+        marginTop: 20,
+        marginBottom: 5,
+        color: "#000",
+    },
+    caixaAlerta: {
+        backgroundColor: "#fff",
+        borderRadius: 20,
+        padding: 15,
+        marginBottom: 20,
+        elevation: 3,
+    },
+    linhaTitulo: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    caixaInfo: {
+        backgroundColor: "#D9D9D9",
+        borderRadius: 15,
+        padding: 12,
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    textoInfo: {
+        fontSize: 14,
+        color: "#000",
+    },
+    button: {
+        backgroundColor: "#000",
+        marginTop: 20,
+        paddingVertical: 12,
+        borderRadius: 20,
+        alignItems: "center",
+    },
+    buttonText: {
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: 16,
+    },
     textarea: {
         height: 100,
         textAlignVertical: "top",
@@ -315,6 +381,27 @@ export default StyleSheet.create({
         color: "#fff",
         fontWeight: "bold",
     },
+    //---------- configuraçoes--------
+    formContainer: {
+        padding: 20,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 10,
+        padding: 10,
+        marginBottom: 15,
+        fontSize: 16,
+        color: "#000",
+    },
+    botaoSalvar: {
+        backgroundColor: "#00aa88",
+        padding: 12,
+        borderRadius: 10,
+        alignItems: "center",
+    },
+
+
     //-------------Home.tsx------------------
     scrollContainer: {
         flexGrow: 1,
@@ -706,107 +793,107 @@ export default StyleSheet.create({
         fontWeight: "bold",
     },
 
-     modalBackground: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.85)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
-  modalImage: {
-    width: "100%",
-    height: "80%",
-    borderRadius: 15,
-    resizeMode: "contain",
-  },
-  modalCloseArea: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  modalBotaoFechar: {
-    position: "absolute",
-    top: 40,
-    right: 20,
-    padding: 10,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    borderRadius: 30,
-  },
-  cardChamado: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
-  },
+    modalBackground: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.85)",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+    },
+    modalImage: {
+        width: "100%",
+        height: "80%",
+        borderRadius: 15,
+        resizeMode: "contain",
+    },
+    modalCloseArea: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+    },
+    modalBotaoFechar: {
+        position: "absolute",
+        top: 40,
+        right: 20,
+        padding: 10,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        borderRadius: 30,
+    },
+    cardChamado: {
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        padding: 15,
+        marginVertical: 8,
+        marginHorizontal: 16,
+        shadowColor: "#000",
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        elevation: 3,
+    },
 
-  label: {
-    fontSize: 16,
-    color: "#333",
-    marginBottom: 4,
-  },
+    label: {
+        fontSize: 16,
+        color: "#333",
+        marginBottom: 4,
+    },
 
-  bold: {
-    fontWeight: "bold",
-  },
+    bold: {
+        fontWeight: "bold",
+    },
 
-  ocorrenciaImagem: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-  },
+    ocorrenciaImagem: {
+        width: 100,
+        height: 100,
+        borderRadius: 10,
+    },
 
-  botaoExcluir: {
-    backgroundColor: "#FF3B30",
-    paddingVertical: 8,
-    borderRadius: 8,
-    marginTop: 10,
-    alignItems: "center",
-  },
+    botaoExcluir: {
+        backgroundColor: "#FF3B30",
+        paddingVertical: 8,
+        borderRadius: 8,
+        marginTop: 10,
+        alignItems: "center",
+    },
 
-  textoBotaoExcluir: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
+    textoBotaoExcluir: {
+        color: "#fff",
+        fontWeight: "bold",
+        fontSize: 16,
+    },
 
-  // Modal
-  modalBackground: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.85)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-  },
+    // Modal
+    modalBackground: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.85)",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+    },
 
-  modalImage: {
-    width: "100%",
-    height: "80%",
-    borderRadius: 15,
-    resizeMode: "contain",
-  },
+    modalImage: {
+        width: "100%",
+        height: "80%",
+        borderRadius: 15,
+        resizeMode: "contain",
+    },
 
-  modalCloseArea: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
+    modalCloseArea: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+    },
 
-  modalBotaoFechar: {
-    position: "absolute",
-    top: 40,
-    right: 20,
-    padding: 10,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    borderRadius: 30,
-  },
+    modalBotaoFechar: {
+        position: "absolute",
+        top: 40,
+        right: 20,
+        padding: 10,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        borderRadius: 30,
+    },
 
 });

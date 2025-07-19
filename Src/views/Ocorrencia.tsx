@@ -213,7 +213,7 @@ const Ocorrencias = () => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={estilo.container}>
       <View style={estilo.header}>
         <TouchableOpacity onPress={() => navigation.replace("Menu")}>
           <Ionicons name="arrow-back" size={28} color="#fff" />

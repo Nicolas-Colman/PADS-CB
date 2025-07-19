@@ -25,7 +25,7 @@ const MinhasOcorrencias = () => {
   const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([]);
   const [carregando, setCarregando] = useState(true);
 
-  // Modal de imagem
+  
   const [modalVisivel, setModalVisivel] = useState(false);
   const [imagemModal, setImagemModal] = useState<string | null>(null);
 
@@ -140,7 +140,7 @@ const MinhasOcorrencias = () => {
               : "Sem data"}
           </Text>
           <Text style={estilo.label}>
-            <Text style={estilo.bold}>Status: </Text> {item.ocorStatus || "Sem status"}
+            <Text style={estilo.bold}>Status: </Text> {item.ocorStatus || "Aceitação pendente"}
           </Text>
         </View>
 
@@ -161,7 +161,7 @@ const MinhasOcorrencias = () => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={estilo.container}>
       <View style={estilo.header}>
         <TouchableOpacity onPress={voltar}>
           <Ionicons name="arrow-back" size={28} color="#fff" />
